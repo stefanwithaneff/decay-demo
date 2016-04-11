@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Audisy: A Better Way to Learn</title>
+    <meta charset="utf-8">
+    <style>
+      p{
+        visibility: visible;
+        font-weight: bold;
+        font-family: monospace;
+        font-size: 3em;
+      }
+      span{
+        padding: 10px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="prompt">Input the given series of characters (case does not matter) and press Submit.</h1>
+    <p><span id="letter1"></span><span id="letter2"></span><span id="letter3"></span><span id="letter4"></span><span id="letter5"></span><span id="letter6"></span><span id="letter7"></span><span id="letter8"></span><span id="letter9"></span><span id="letter10"></span><span id="letter11"></span><span id="letter12"></span></p>
+    <form>
+      <input id="response" type="text" maxlength="12" autocomplete="off">
+      <input type="submit" value="Submit">
+    </form>
+    <h4 id="error"></h4>
+    <script src="decay.js"></script>
+  </body>
+</html>
