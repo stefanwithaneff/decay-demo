@@ -1,5 +1,8 @@
 const gulp = require('gulp');
 const babel = require('rollup-plugin-babel');
+const commonjs = require('rollup-plugin-commonjs');
+const nodeResolve = require('rollup-plugin-node-resolve');
+const replace = require('rollup-plugin-replace');
 const rollup = require('rollup').rollup;
 const del = require('del');
 
@@ -13,9 +16,20 @@ gulp.task('bundle-es6', () => {
       'immutable',
     ],
     plugins: [
+      nodeResolve({
+        jsnext: true,
+        main: true,
+        browser: true,
+      }),
+      commonjs({
+        ignoreGlobal: true,
+      }),
       babel({
         exclude: 'node_modules/**',
         presets: ['es2015-rollup', 'react'],
+      }),
+      replace({
+        'process.env.NODE_ENV': JSON.stringify('production'),
       }),
     ],
   }).then(bundle => {
