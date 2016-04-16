@@ -19,7 +19,8 @@ export function newPrompt(length) {
       return (Math.random() < 0.4) ?
           String.fromCharCode((Math.floor(Math.random() * 10)) + 48) :
           String.fromCharCode((Math.floor(Math.random() * 26)) + 65);
-    });
+    })
+    .join('');
 
   return {
     type: NEW_PROMPT,

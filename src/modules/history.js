@@ -17,7 +17,7 @@ export default function reducer(state, action) {
     case NEW_PROMPT:
       return state.withMutations(oldState => {
         oldState
-          .set('scores', Immutable.List()) // eslint-disable-line
+          .set('scores', Immutable.List()) // eslint-disable-line new-cap
           .set('index', 0);
       });
     case LOG_DATA:
@@ -48,6 +48,6 @@ export const aggregateSelector = createSelector(
       return aggArr.map((agg, i) => {
         return agg + scores[i] / (scores.length * 2);
       });
-    }, []);
+    }, null);
   }
 );
