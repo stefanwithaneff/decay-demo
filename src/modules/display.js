@@ -1,5 +1,8 @@
+import { NEW_PROMPT } from './common';
+
 const CHANGE_TAB = 'CHANGE_TAB';
 const TOGGLE_MODAL = 'TOGGLE_MODAL';
+
 /*
  * Display Reducer
  *
@@ -10,6 +13,8 @@ const TOGGLE_MODAL = 'TOGGLE_MODAL';
  */
 export default function reducer(state, action) {
   switch (action.type) {
+    case NEW_PROMPT:
+      return state.set('modal', false);
     case CHANGE_TAB:
       return state.set('tab', action.tab);
     case TOGGLE_MODAL:
@@ -19,6 +24,7 @@ export default function reducer(state, action) {
   }
 }
 
+// Action Creator: Changes currently visible view container
 export function changeTab(tab) {
   return {
     type: CHANGE_TAB,
@@ -26,6 +32,7 @@ export function changeTab(tab) {
   };
 }
 
+// Action Creator: Toggles New Prompt modal visibility
 export function toggleModal() {
   return { type: TOGGLE_MODAL };
 }

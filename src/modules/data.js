@@ -73,7 +73,7 @@ export const delaySelector = createSelector(
     // Define predicted value for k
     // Return naive estimate if data is too small
     if (kStar === null) {
-      if (data.size === 0) return 5000;
+      if (data.size === 0) return 5;
       if (data.size === 1) {
         k = data.get(0) / 2;
       }
