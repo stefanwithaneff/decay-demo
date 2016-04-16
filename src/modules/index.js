@@ -2,7 +2,6 @@ import dataReducer from './data';
 import displayReducer from './display';
 import assessmentReducer from './assessment';
 import historyReducer from './history';
-import Immutable from 'immutable';
 
 /*
  * Root Reducer
@@ -14,9 +13,7 @@ import Immutable from 'immutable';
  * @history: Scoring history from the assessment and state for managing the history view
  *
  */
-
-// eslint-disable-next-line new-cap
-export default function reducer(state = Immutable.Map(), action) {
+export default function reducer(state, action) {
   return state.withMutations(oldState => {
     oldState
       .set('data', dataReducer(oldState.get('data'), action))

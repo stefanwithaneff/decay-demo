@@ -2,9 +2,10 @@ export const LOG_DATA = 'LOG_DATA';
 export const NEW_PROMPT = 'NEW_PROMPT';
 
 // Action Creator: Logs assessment results
-export function logData(score) {
+export function logData(score, k) {
   return {
     type: LOG_DATA,
+    k,
     score,
     time: Date.now(),
   };
