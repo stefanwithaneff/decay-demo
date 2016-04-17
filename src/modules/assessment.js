@@ -12,7 +12,7 @@ const NEXT_PRACTICE = 'NEXT_PRACTICE';
  *     ['practice', 'practice2', 'wait', 'prompt', 'score']
  *
  */
-export default function reducer(state, action) {
+export default function assessmentReducer(state, action) {
   switch (action.type) {
     case NEW_PROMPT:
       return state.withMutations((oldState) => {

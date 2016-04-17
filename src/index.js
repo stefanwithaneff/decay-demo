@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import Immutable from 'immutable';
 import rootReducer from './modules';
 import { newPrompt } from './modules/common';
+import App from './connectors/App';
 
 /* eslint-disable new-cap */
 const defaultState = Immutable.Map({
@@ -37,7 +38,7 @@ const store = Redux.createStore(rootReducer, initialState, Redux.applyMiddleware
 
 ReactDOM.render(
   <Provider store={store}>
-    <h1>{store.getState().get('assessment').get('prompt')}</h1>
+    <App />
   </Provider>,
   document.querySelector('#app')
 );

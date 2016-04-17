@@ -12,7 +12,7 @@ const CHANGE_INDEX = 'CHANGE_INDEX';
  * @index: The index of the score being viewed, negative values represent the aggregate view
  *
  */
-export default function reducer(state, action) {
+export default function historyReducer(state, action) {
   switch (action.type) {
     case NEW_PROMPT:
       return state.withMutations(oldState => {

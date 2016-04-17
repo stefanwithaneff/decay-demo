@@ -9,7 +9,7 @@ const RECALL_THRESHOLD = 0.85;
  * state is an Immutable.List of coefficients from previous forgetting curves
  *
  */
-export default function reducer(state, action) {
+export default function dataReducer(state, action) {
   switch (action.type) {
     case NEW_PROMPT:
       return state.clear();

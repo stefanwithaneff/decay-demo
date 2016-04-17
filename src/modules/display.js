@@ -11,7 +11,7 @@ const TOGGLE_MODAL = 'TOGGLE_MODAL';
  * @modal: A boolean defining modal visibility
  *
  */
-export default function reducer(state, action) {
+export default function displayReducer(state, action) {
   switch (action.type) {
     case NEW_PROMPT:
       return state.set('modal', false);

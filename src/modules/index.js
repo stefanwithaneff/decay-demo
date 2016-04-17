@@ -13,7 +13,7 @@ import historyReducer from './history';
  * @history: Scoring history from the assessment and state for managing the history view
  *
  */
-export default function reducer(state, action) {
+export default function rootReducer(state, action) {
   return state.withMutations(oldState => {
     oldState
       .set('data', dataReducer(oldState.get('data'), action))
