@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import Immutable from 'immutable';
 import rootReducer from './modules';
 import { newPrompt } from './modules/common';
-import App from './connectors/App';
+import App from './components';
 
 /* eslint-disable new-cap */
 const defaultState = Immutable.Map({

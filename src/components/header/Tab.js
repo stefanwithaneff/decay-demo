@@ -1,7 +1,7 @@
 import React from 'react';
 import Redux from 'redux';
 import { connect } from 'react-redux';
-import { changeTab } from '../modules/display';
+import { changeTab } from '../../modules/display';
 
 const Tab = (props) => {
   return (

@@ -6,7 +6,7 @@ const replace = require('rollup-plugin-replace');
 const rollup = require('rollup').rollup;
 const del = require('del');
 
-gulp.task('bundle-es6', () => {
+gulp.task('bundle', () => {
   return rollup({
     entry: 'src/index.js',
     external: [

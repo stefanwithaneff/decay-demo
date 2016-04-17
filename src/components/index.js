@@ -1,10 +1,10 @@
 import React from 'react';
 import Redux from 'redux';
 import { connect } from 'react-redux';
-import Header from '../components/Header';
-import TabbedWindow from '../components/TabbedWindow';
-import Footer from '../components/Footer';
-import Modal from '../components/Modal';
+import Header from './header/Header';
+import TabbedWindow from './content/TabbedWindow';
+import Footer from './footer/Footer';
+import Modal from './modal/Modal';
 import { toggleModal } from '../modules/display';
 import { delaySelector } from '../modules/data';
 
@@ -15,7 +15,7 @@ const App = (props) => {
         lastReintro={props.lastReintroduced}
         view={props.view}
       />
-      <TabbedWindow tab={props.tab} />
+      <TabbedWindow tab={props.tab} view={props.view} />
       <Footer onToggle={props.toggleModal} />
       <Modal modal={props.modal} onToggle={props.toggleModal} />
     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import Tab from '../connectors/Tab';
+import Tab from './Tab';
 
 const TabNavigator = () => {
   return (
