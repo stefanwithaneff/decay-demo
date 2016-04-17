@@ -1,17 +1,12 @@
 import React from 'react';
 import Prompt from './Prompt';
-import WaitMessage from './WaitMessage';
 
-const Assessment = (props) => {
+const Assessment = () => {
   return (
-    <div className="assessment">
-      { (props.view === 'wait') ? <Prompt /> : <WaitMessage /> }
+    <div className="content assessment">
+      <Prompt />
     </div>
   );
-};
-
-Assessment.propTypes = {
-  view: React.PropTypes.string.isRequired,
 };
 
 export default Assessment;
