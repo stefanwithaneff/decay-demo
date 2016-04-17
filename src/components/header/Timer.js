@@ -3,11 +3,17 @@ import React from 'react';
 export default class Timer extends React.Component {
   constructor(props) {
     super(props);
-    this.render = this.render.bind(this);
+    this.changeTime = this.changeTime.bind(this);
   }
 
   componentDidMount() {
-    setInterval(this.render, 1000);
+    setInterval(this.changeTime, 1000);
+  }
+
+  changeTime() {
+    this.timer.textContent = (this.props.view === 'wait') ?
+      this.timeToText(this.props.delay, this.props.lastReintro) :
+      '00:00:00';
   }
 
   // Returns time left as text to be displayed
@@ -37,7 +43,7 @@ export default class Timer extends React.Component {
 
   render() {
     return (
-      <div className="timer">
+      <div className="timer" ref={(e) => { this.timer = e; }}>
         {
           this.props.view === 'wait' ?
             this.timeToText(this.props.delay, this.props.lastReintro) :
