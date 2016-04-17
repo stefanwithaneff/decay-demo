@@ -3,7 +3,7 @@ import React from 'react';
 export default class PromptInfo extends React.Component {
   calcScore(scoreArray) {
     return Math.ceil(scoreArray.reduce((score, charScore) => {
-      return score + charScore / scoreArray.length;
+      return score + charScore / (scoreArray.length * 2);
     }, 0) * 100);
   }
 

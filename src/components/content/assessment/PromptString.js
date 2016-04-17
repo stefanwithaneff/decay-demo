@@ -23,7 +23,7 @@ const PromptString = (props) => {
 PromptString.propTypes = {
   prompt: React.PropTypes.string.isRequired,
   view: React.PropTypes.string.isRequired,
-  score: React.PropTypes.array.isRequired,
+  score: React.PropTypes.array,
 };
 
 export default PromptString;

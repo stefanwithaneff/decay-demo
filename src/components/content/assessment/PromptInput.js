@@ -20,14 +20,14 @@ export default class PromptInput extends React.Component {
   }
 
   // Derive k value from score array and last reintroduction time
-  static deriveK(scoreArr) {
+  static deriveK(scoreArr, lastReintro) {
     let score = scoreArr.reduce((sum, char) => sum + char / (scoreArr.length * 2), 0);
     if (score === 1) {
       score = (scoreArr.length * 2 - 1) / (scoreArr.length * 2);
     } else if (score === 0) {
       score = 1 / (scoreArr.length * 2);
     }
-    return Math.abs(Math.log(score) / (Date.now() - this.lastReintro));
+    return Math.abs(Math.log(score) / ((Date.now() - lastReintro) / 1000));
   }
 
   constructor(props) {
@@ -43,10 +43,11 @@ export default class PromptInput extends React.Component {
 
   // Return score and k value as an array
   getData() {
-    const score = this.recordScore(this.props.prompt, this.input.value);
-    return [score, this.deriveK(score)];
+    const score = PromptInput.recordScore(this.props.prompt, this.input.value);
+    return [score, PromptInput.deriveK(score, this.props.lastReintro)];
   }
 
+  // Validates input and dispatches actions
   validateInput() {
     switch (this.props.view) {
       case 'practice':
