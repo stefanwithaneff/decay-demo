@@ -34,6 +34,7 @@ export default class PromptInput extends React.Component {
     super(props);
     this.validateInput = this.validateInput.bind(this);
     this.getData = this.getData.bind(this);
+    this.submitInput = this.submitInput.bind(this);
   }
 
   // Clear input field on view transitions
@@ -45,6 +46,12 @@ export default class PromptInput extends React.Component {
   getData() {
     const score = PromptInput.recordScore(this.props.prompt, this.input.value);
     return [score, PromptInput.deriveK(score, this.props.lastReintro)];
+  }
+
+  submitInput(event) {
+    if (event.keyCode === 13) {
+      this.validateInput();
+    }
   }
 
   // Validates input and dispatches actions
@@ -79,6 +86,7 @@ export default class PromptInput extends React.Component {
           ref={(e) => { this.input = e; }}
           type="text"
           maxLength={this.props.prompt.length}
+          onKeyDown={this.submitInput}
         />
         <button onClick={this.validateInput}>Submit</button>
         <div ref={(e) => { this.err = e; }} className="prompt-error" />

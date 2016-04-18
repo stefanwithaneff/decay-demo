@@ -22,6 +22,7 @@
     "babel-preset-react": "^6.5.0",
     "del": "^2.2.0",
     "gulp": "^3.9.1",
+    "gulp-sass": "^2.2.0",
     "rollup": "^0.25.8",
     "rollup-plugin-babel": "^2.4.0",
     "rollup-plugin-commonjs": "^2.2.1",

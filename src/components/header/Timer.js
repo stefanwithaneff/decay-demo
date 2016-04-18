@@ -7,13 +7,16 @@ export default class Timer extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(this.changeTime, 1000);
+    requestAnimationFrame(this.changeTime);
   }
 
+  // Uses ref to display derived 'Time Remaining' state
   changeTime() {
     this.timer.textContent = (this.props.view === 'wait') ?
       this.timeToText(this.props.delay, this.props.lastReintro) :
       '00:00:00';
+
+    requestAnimationFrame(this.changeTime);
   }
 
   // Returns time left as text to be displayed

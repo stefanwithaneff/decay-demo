@@ -18,7 +18,7 @@ class Prompt extends React.Component {
 
   render() {
     return (
-      <div className={(this.props.view === 'wait') ? 'prompt waiting' : 'prompt'}>
+      <div className={`prompt-main ${this.props.view}`}>
         <PromptInfo view={this.props.view} score={this.props.score} />
         <PromptString prompt={this.props.prompt} view={this.props.view} score={this.props.score} />
         <PromptInput prompt={this.props.prompt}
