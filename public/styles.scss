@@ -94,9 +94,15 @@ header {
   .tab {
     font-weight: bold;
     color: $interactive-color;
+    cursor: pointer;
 
     &.selected {
       color: $inactive-color;
+      text-decoration: underline;
+      cursor: default;
+    }
+
+    &:hover {
       text-decoration: underline;
     }
 
@@ -105,7 +111,7 @@ header {
       content: "\25CF";
       margin: 0 0.5rem;
       color: $inactive-color;
-      text-decoration: none;
+      cursor: default;
     }
   }
 }
@@ -168,6 +174,8 @@ header {
 
     .prompt-char {
       padding: 0.5rem;
+      user-select: none;
+      cursor: default;
 
       &.score-2 {
         background-color: $correct-color;
@@ -202,6 +210,7 @@ header {
         font-size: 1rem;
         color: white;
         background-color: $interactive-color;
+        cursor: pointer;
       }
 
       .prompt-error {

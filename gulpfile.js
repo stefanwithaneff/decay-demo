@@ -5,7 +5,7 @@ const nodeResolve = require('rollup-plugin-node-resolve');
 const replace = require('rollup-plugin-replace');
 const rollup = require('rollup').rollup;
 const sass = require('gulp-sass');
-const del = require('del');
+const autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('bundle', () => {
   return rollup({
@@ -50,6 +50,7 @@ gulp.task('bundle', () => {
 gulp.task('sass', () => {
   return gulp.src('./public/styles.scss')
     .pipe(sass().on('error', sass.logError))
+    .pipe(autoprefixer({ browsers: ['> 10%'] }))
     .pipe(gulp.dest('./public/build'));
 });
 
