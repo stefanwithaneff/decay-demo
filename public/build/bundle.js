@@ -1583,6 +1583,7 @@
         _this.validateInput = _this.validateInput.bind(_this);
         _this.getData = _this.getData.bind(_this);
         _this.submitInput = _this.submitInput.bind(_this);
+        _this.autoFill = _this.autoFill.bind(_this);
         return _this;
       }
 
@@ -1603,6 +1604,9 @@
           var score = PromptInput.recordScore(this.props.prompt, this.input.value);
           return [score, PromptInput.deriveK(score, this.props.lastReintro)];
         }
+
+        // Submits input value when the Enter key is hit
+
       }, {
         key: 'submitInput',
         value: function submitInput(event) {
@@ -1610,12 +1614,24 @@
             this.validateInput();
           }
         }
+      }, {
+        key: 'autoFill',
+        value: function autoFill() {
+          var _this2 = this;
+
+          if (this.props.view === 'prompt') return;
+          this.fakeInput.value = this.props.prompt.split('').map(function (char, i) {
+            if (i < _this2.input.value.length) return ' ';
+            return char;
+          }).join('');
+        }
 
         // Validates input and dispatches actions
 
       }, {
         key: 'validateInput',
         value: function validateInput() {
+          this.err.textContent = '';
           switch (this.props.view) {
             case 'practice':
             case 'practice2':
@@ -1641,27 +1657,42 @@
       }, {
         key: 'render',
         value: function render() {
-          var _this2 = this;
+          var _this3 = this;
 
           return React.createElement(
             'div',
             { className: 'prompt-input' },
-            React.createElement('input', {
+            React.createElement('input', { className: 'real',
               ref: function ref(e) {
-                _this2.input = e;
+                _this3.input = e;
               },
               type: 'text',
               maxLength: this.props.prompt.length,
-              onKeyDown: this.submitInput
+              autoComplete: 'off',
+              onKeyDown: this.submitInput,
+              onChange: this.autoFill,
+              onFocus: this.autoFill
             }),
             React.createElement(
               'button',
-              { onClick: this.validateInput },
+              { className: 'real', onClick: this.validateInput },
               'Submit'
             ),
             React.createElement('div', { ref: function ref(e) {
-                _this2.err = e;
-              }, className: 'prompt-error' })
+                _this3.err = e;
+              }, className: 'prompt-error' }),
+            React.createElement(
+              'div',
+              { className: 'prompt-input fake' },
+              React.createElement('input', { ref: function ref(e) {
+                  _this3.fakeInput = e;
+                }, readOnly: true }),
+              React.createElement(
+                'button',
+                { disabled: true },
+                'Submit'
+              )
+            )
           );
         }
       }]);

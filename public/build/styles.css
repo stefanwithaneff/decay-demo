@@ -141,10 +141,26 @@ header {
 
 .assessment .prompt-main .prompt-input {
   display: flex;
-  flex-flow: row wrap; }
+  flex-flow: row wrap;
+  position: relative; }
+  .assessment .prompt-main .prompt-input .real {
+    position: relative;
+    z-index: 1; }
+  .assessment .prompt-main .prompt-input .fake {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0; }
+    .assessment .prompt-main .prompt-input .fake input {
+      color: gray;
+      font-style: italic; }
   .assessment .prompt-main .prompt-input input {
     flex-grow: 5;
-    font-size: 1.5rem; }
+    font-size: 1.5rem;
+    font-family: monospace; }
+    .assessment .prompt-main .prompt-input input.real {
+      background-color: transparent; }
   .assessment .prompt-main .prompt-input button {
     flex-grow: 1;
     border: 0;

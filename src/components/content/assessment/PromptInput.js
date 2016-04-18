@@ -35,6 +35,7 @@ export default class PromptInput extends React.Component {
     this.validateInput = this.validateInput.bind(this);
     this.getData = this.getData.bind(this);
     this.submitInput = this.submitInput.bind(this);
+    this.autoFill = this.autoFill.bind(this);
   }
 
   // Clear input field on view transitions
@@ -48,14 +49,24 @@ export default class PromptInput extends React.Component {
     return [score, PromptInput.deriveK(score, this.props.lastReintro)];
   }
 
+  // Submits input value when the Enter key is hit
   submitInput(event) {
     if (event.keyCode === 13) {
       this.validateInput();
     }
   }
 
+  autoFill() {
+    if (this.props.view === 'prompt') return;
+    this.fakeInput.value = this.props.prompt.split('').map((char, i) => {
+      if (i < this.input.value.length) return ' ';
+      return char;
+    }).join('');
+  }
+
   // Validates input and dispatches actions
   validateInput() {
+    this.err.textContent = '';
     switch (this.props.view) {
       case 'practice':
       case 'practice2':
@@ -82,15 +93,21 @@ export default class PromptInput extends React.Component {
   render() {
     return (
       <div className="prompt-input">
-        <input
+        <input className="real"
           ref={(e) => { this.input = e; }}
           type="text"
           maxLength={this.props.prompt.length}
           autoComplete="off"
           onKeyDown={this.submitInput}
+          onChange={this.autoFill}
+          onFocus={this.autoFill}
         />
-        <button onClick={this.validateInput}>Submit</button>
+        <button className="real" onClick={this.validateInput}>Submit</button>
         <div ref={(e) => { this.err = e; }} className="prompt-error" />
+        <div className="prompt-input fake">
+          <input ref={(e) => { this.fakeInput = e; }} readOnly />
+          <button disabled>Submit</button>
+        </div>
       </div>
     );
   }

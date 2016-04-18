@@ -197,10 +197,34 @@ header {
     .prompt-input {
       display: flex;
       flex-flow: row wrap;
+      position: relative;
+
+      .real {
+        position: relative;
+        z-index: 1;
+      }
+
+      .fake {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0;
+
+        input {
+          color: gray;
+          font-style: italic;
+        }
+      }
 
       input {
         flex-grow: 5;
         font-size: 1.5rem;
+        font-family: monospace;
+
+        &.real {
+          background-color: transparent;
+        }
       }
 
       button {
