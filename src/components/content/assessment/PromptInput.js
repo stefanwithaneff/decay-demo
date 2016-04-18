@@ -86,6 +86,7 @@ export default class PromptInput extends React.Component {
           ref={(e) => { this.input = e; }}
           type="text"
           maxLength={this.props.prompt.length}
+          autoComplete="off"
           onKeyDown={this.submitInput}
         />
         <button onClick={this.validateInput}>Submit</button>

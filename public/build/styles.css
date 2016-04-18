@@ -87,7 +87,7 @@ header {
 /* Content Styles */
 .content {
   width: 100%;
-  height: calc(100vh - 6.7rem - 1px);
+  min-height: calc(100vh - 6.7rem - 1px);
   padding-top: 50px;
   background-color: white; }
 
