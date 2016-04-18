@@ -4,6 +4,7 @@ const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const replace = require('rollup-plugin-replace');
 const rollup = require('rollup').rollup;
+const sass = require('gulp-sass');
 const del = require('del');
 
 gulp.task('bundle', () => {
@@ -45,3 +46,15 @@ gulp.task('bundle', () => {
     });
   });
 });
+
+gulp.task('sass', () => {
+  return gulp.src('./public/styles.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('./public/build'));
+});
+
+gulp.task('watch', () => {
+  gulp.watch('./public/styles.scss', ['sass']);
+});
+
+gulp.task('default', ['bundle', 'sass']);

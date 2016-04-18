@@ -8,7 +8,7 @@ const PromptString = (props) => {
           return (
             <span key={`char-${i}`}
               className={(props.view === 'score') ?
-                `prompt-char score-${props.score[i]}` : 'prompt-car'
+                `prompt-char score-${props.score[i]}` : 'prompt-char'
               }
             >
               {char}

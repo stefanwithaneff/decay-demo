@@ -1,0 +1,222 @@
+/* Application variables */
+$correct-color: hsla(120, 100%, 70%, 1);
+$middle-color: hsla(240, 100%, 70%, 1);
+$incorrect-color: hsla(0, 100%, 70%, 1);
+
+$interactive-color: hsla(209, 100%, 50%, 1);
+$inactive-color: hsla(209, 25%, 25%, 1);
+
+$primary-color: hsla(209, 10%, 95%, 1);
+$secondary-color: white;
+$accent-color: hsla(209, 10%, 75%, 1);
+
+$break-small: 560px;
+$break-med: 800px;
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Application Styles */
+* {
+  box-sizing: border-box;
+}
+
+#app {
+  font-family: "Roboto", sans-serif;
+  color: $inactive-color;
+}
+
+/* Header Styles */
+
+header {
+  width: 100%;
+  background-color: $primary-color;
+
+  .timer {
+    padding: 0.5rem 5%;
+    border-bottom: 1px solid $accent-color;
+    text-align: right;
+    font-size: 1.5rem;
+  }
+
+  nav {
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 1.1rem;
+  }
+
+  .tab {
+    font-weight: bold;
+    color: $interactive-color;
+
+    &.selected {
+      color: $inactive-color;
+      text-decoration: underline;
+    }
+
+    &:nth-child(2)::before, &:nth-child(2)::after {
+      display: inline-block;
+      content: "\25CF";
+      margin: 0 0.5rem;
+      color: $inactive-color;
+      text-decoration: none;
+    }
+  }
+}
+
+/* Content Styles */
+
+.content {
+  width: 100%;
+  height: calc(100vh - 6.7rem - 1px);
+  padding-top: 50px;
+  background-color: $secondary-color;
+}
+
+.content-main {
+  width: 80%;
+  max-width: 800px;
+  padding: 50px;
+  margin: 0 auto;
+  text-align: center;
+  background-color: $primary-color;
+  box-shadow: 0 0.25rem 0.5rem $accent-color;
+}
+
+/* Assessment Styles */
+
+.assessment {
+  .prompt-main {
+    @extend .content-main;
+
+    @media (max-width: $break-small) {
+      .prompt-info, .prompt-string, .prompt-input input {
+        font-size: 1rem !important;
+      }
+    }
+
+    .prompt-info {
+      height: 3rem;
+      text-align: left;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .prompt-string {
+      display: inline-block;
+      border: 3px solid $accent-color;
+      margin: 2rem 0;
+      font-size: 3rem;
+      font-family: Consolas, monospace;
+      background-color: white;
+      overflow: hidden;
+
+      @media (max-width: $break-med) {
+        font-size: 2rem;
+
+        .prompt-char {
+          padding: 0.25rem;
+        }
+      }
+    }
+
+    .prompt-char {
+      padding: 0.5rem;
+
+      &.score-2 {
+        background-color: $correct-color;
+      }
+
+      &.score-1 {
+        background-color: $middle-color;
+      }
+
+      &.score-0 {
+        background-color: $incorrect-color;
+      }
+
+      &:not(:first-child) {
+        border-left: 1px solid $accent-color;
+      }
+    }
+
+    .prompt-input {
+      display: flex;
+      flex-flow: row wrap;
+
+      input {
+        flex-grow: 5;
+        font-size: 1.5rem;
+      }
+
+      button {
+        flex-grow: 1;
+        border: 0;
+        margin: 0 1rem;
+        font-size: 1rem;
+        color: white;
+        background-color: $interactive-color;
+      }
+
+      .prompt-error {
+        flex-grow: 0;
+        height: 1rem;
+        width: 100%;
+        text-align: left;
+        color: red;
+      }
+    }
+  }
+}
+
+/* Footer Styles */
+footer {
+  padding: 0.5rem;
+  color: $interactive-color;
+}
