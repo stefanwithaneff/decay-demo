@@ -26,7 +26,6 @@ gulp.task('bundle', () => {
         ignoreGlobal: true,
       }),
       babel({
-        exclude: 'node_modules/**',
         presets: ['es2015-rollup', 'react'],
       }),
       replace({
