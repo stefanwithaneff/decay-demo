@@ -67,6 +67,12 @@ table {
   box-sizing: border-box;
 }
 
+html {
+  @media (min-resolution: 192dpi) {
+    font-size: 24px;
+  }
+}
+
 #app {
   font-family: "Roboto", sans-serif;
   color: $inactive-color;
@@ -130,7 +136,6 @@ header {
   max-width: 800px;
   padding: 50px;
   margin: 0 auto;
-  text-align: center;
   background-color: $primary-color;
   box-shadow: 0 0.25rem 0.5rem $accent-color;
 }
@@ -147,21 +152,30 @@ header {
       }
     }
 
+    &.wait {
+      .prompt-string, .prompt-input {
+        visibility: hidden;
+      }
+    }
+
+    &.prompt {
+      .prompt-string {
+        visibility: hidden;
+      }
+    }
+
     .prompt-info {
-      height: 3rem;
+      min-height: 3rem;
       text-align: left;
       font-size: 1.4rem;
       font-weight: bold;
     }
 
     .prompt-string {
-      display: inline-block;
-      border: 3px solid $accent-color;
-      margin: 2rem 0;
+      margin-top: 2rem;
+      margin-bottom: 3rem;
       font-size: 3rem;
       font-family: Consolas, monospace;
-      background-color: white;
-      overflow: hidden;
 
       @media (max-width: $break-med) {
         font-size: 2rem;
@@ -173,9 +187,12 @@ header {
     }
 
     .prompt-char {
+      display:inline-block;
       padding: 0.5rem;
+      border: 1px solid $accent-color;
       user-select: none;
       cursor: default;
+      background-color: white;
 
       &.score-2 {
         background-color: $correct-color;
@@ -187,10 +204,6 @@ header {
 
       &.score-0 {
         background-color: $incorrect-color;
-      }
-
-      &:not(:first-child) {
-        border-left: 1px solid $accent-color;
       }
     }
 

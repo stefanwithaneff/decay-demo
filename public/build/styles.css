@@ -50,6 +50,10 @@ table {
 * {
   box-sizing: border-box; }
 
+@media (min-resolution: 192dpi) {
+  html {
+    font-size: 24px; } }
+
 #app {
   font-family: "Roboto", sans-serif;
   color: #304050; }
@@ -96,7 +100,6 @@ header {
   max-width: 800px;
   padding: 50px;
   margin: 0 auto;
-  text-align: center;
   background-color: #f1f2f4;
   box-shadow: 0 0.25rem 0.5rem #b9bfc6; }
 
@@ -105,20 +108,23 @@ header {
   .assessment .prompt-main .prompt-info, .assessment .prompt-main .prompt-string, .assessment .prompt-main .prompt-input input {
     font-size: 1rem !important; } }
 
+.assessment .prompt-main.wait .prompt-string, .assessment .prompt-main.wait .prompt-input {
+  visibility: hidden; }
+
+.assessment .prompt-main.prompt .prompt-string {
+  visibility: hidden; }
+
 .assessment .prompt-main .prompt-info {
-  height: 3rem;
+  min-height: 3rem;
   text-align: left;
   font-size: 1.4rem;
   font-weight: bold; }
 
 .assessment .prompt-main .prompt-string {
-  display: inline-block;
-  border: 3px solid #b9bfc6;
-  margin: 2rem 0;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
   font-size: 3rem;
-  font-family: Consolas, monospace;
-  background-color: white;
-  overflow: hidden; }
+  font-family: Consolas, monospace; }
   @media (max-width: 800px) {
     .assessment .prompt-main .prompt-string {
       font-size: 2rem; }
@@ -126,18 +132,19 @@ header {
         padding: 0.25rem; } }
 
 .assessment .prompt-main .prompt-char {
+  display: inline-block;
   padding: 0.5rem;
+  border: 1px solid #b9bfc6;
   -webkit-user-select: none;
           user-select: none;
-  cursor: default; }
+  cursor: default;
+  background-color: white; }
   .assessment .prompt-main .prompt-char.score-2 {
     background-color: #66ff66; }
   .assessment .prompt-main .prompt-char.score-1 {
     background-color: #6666ff; }
   .assessment .prompt-main .prompt-char.score-0 {
     background-color: #ff6666; }
-  .assessment .prompt-main .prompt-char:not(:first-child) {
-    border-left: 1px solid #b9bfc6; }
 
 .assessment .prompt-main .prompt-input {
   display: flex;
