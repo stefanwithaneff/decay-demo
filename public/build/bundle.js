@@ -1235,7 +1235,7 @@
     // expects delay to be in seconds
     function setTimerForPrompt(delay) {
       return function (dispatch) {
-        setTimeout(function () {
+        return setTimeout(function () {
           dispatch({ type: READY_PROMPT });
         }, delay > 0 ? delay * 1000 : 0);
       };
@@ -1318,7 +1318,7 @@
         value: function componentDidMount() {
           // Set timer if app is reloaded in waiting state
           if (this.props.view === 'wait') {
-            setTimerForPrompt(this.props.delay - (Date.now() - this.props.lastReintro));
+            this.props.setTimer(this.props.delay - (Date.now() - this.props.lastReintro) / 1000);
           }
 
           // Initialize timer render loop
@@ -1380,7 +1380,8 @@
     Timer.propTypes = {
       delay: React.PropTypes.number.isRequired,
       lastReintro: React.PropTypes.number,
-      view: React.PropTypes.string.isRequired
+      view: React.PropTypes.string.isRequired,
+      setTimer: React.PropTypes.func.isRequired
     };
 
     var Tab = function Tab(props) {
@@ -1442,7 +1443,11 @@
       return React.createElement(
         'header',
         null,
-        React.createElement(Timer, { delay: props.delay, lastReintro: props.lastReintro, view: props.view }),
+        React.createElement(Timer, { delay: props.delay,
+          lastReintro: props.lastReintro,
+          view: props.view,
+          setTimer: props.setTimer
+        }),
         React.createElement(TabNavigator, null)
       );
     };
@@ -1450,7 +1455,8 @@
     Header.propTypes = {
       delay: React.PropTypes.number.isRequired,
       lastReintro: React.PropTypes.number,
-      view: React.PropTypes.string.isRequired
+      view: React.PropTypes.string.isRequired,
+      setTimer: React.PropTypes.func.isRequired
     };
 
     var PromptInfo = function (_React$Component) {
@@ -1949,7 +1955,8 @@
         { className: 'container' },
         React.createElement(Header, { delay: props.delay,
           lastReintro: props.lastReintroduced,
-          view: props.view
+          view: props.view,
+          setTimer: props.setTimerForPrompt
         }),
         React.createElement(TabbedWindow, { tab: props.tab, view: props.view }),
         React.createElement(Modal, { modal: props.modal, onToggle: props.toggleModal, newPrompt: props.newPrompt })
@@ -1963,7 +1970,8 @@
       delay: React.PropTypes.number.isRequired,
       lastReintroduced: React.PropTypes.number,
       toggleModal: React.PropTypes.func.isRequired,
-      newPrompt: React.PropTypes.func.isRequired
+      newPrompt: React.PropTypes.func.isRequired,
+      setTimerForPrompt: React.PropTypes.func.isRequired
     };
 
     var mapStateToProps = function mapStateToProps(state) {
@@ -1977,7 +1985,9 @@
     };
 
     var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-      return Redux.bindActionCreators({ toggleModal: toggleModal, newPrompt: newPrompt }, dispatch);
+      return Redux.bindActionCreators({
+        toggleModal: toggleModal, newPrompt: newPrompt, setTimerForPrompt: setTimerForPrompt
+      }, dispatch);
     };
 
     var App$1 = connect(mapStateToProps, mapDispatchToProps)(App);
@@ -1988,11 +1998,11 @@
     function reduxLocalStore(store) {
       return function (next) {
         return function (action) {
-          next(action);
-          if (typeof Storage !== 'undefined' && ['wait', 'score'].indexOf(store.getState().get('assessment').get('view')) !== -1) {
+          var returnValue = next(action);
+          if (typeof Storage !== 'undefined' && store.getState().get('assessment').get('view') !== 'practice2') {
             localStorage.state = JSON.stringify(store.getState().toJS());
           }
-          return;
+          return returnValue;
         };
       };
     }
@@ -2019,7 +2029,7 @@
     var initialState = defaultState;
     if (typeof Storage !== 'undefined') {
       if (localStorage.state !== undefined) {
-        initialState = Immutable.fromJS(JSON.parse(localStorage.state));
+        initialState = Immutable.fromJS(JSON.parse(localStorage.state)).setIn(['display', 'modal'], false); // Closes modal if saved in open state
       }
     }
 

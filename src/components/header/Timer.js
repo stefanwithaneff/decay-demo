@@ -1,5 +1,4 @@
 import React from 'react';
-import { setTimerForPrompt } from '../../modules/assessment';
 
 export default class Timer extends React.Component {
   constructor(props) {
@@ -10,7 +9,7 @@ export default class Timer extends React.Component {
   componentDidMount() {
     // Set timer if app is reloaded in waiting state
     if (this.props.view === 'wait') {
-      setTimerForPrompt(this.props.delay - (Date.now() - this.props.lastReintro));
+      this.props.setTimer(this.props.delay - (Date.now() - this.props.lastReintro) / 1000);
     }
 
     // Initialize timer render loop
@@ -68,4 +67,5 @@ Timer.propTypes = {
   delay: React.PropTypes.number.isRequired,
   lastReintro: React.PropTypes.number,
   view: React.PropTypes.string.isRequired,
+  setTimer: React.PropTypes.func.isRequired,
 };

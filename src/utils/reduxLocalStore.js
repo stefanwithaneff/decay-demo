@@ -3,11 +3,11 @@
  */
 export default function reduxLocalStore(store) {
   return next => action => {
-    next(action);
+    const returnValue = next(action);
     if (typeof Storage !== 'undefined' &&
-      ['wait', 'score'].indexOf(store.getState().get('assessment').get('view')) !== -1) {
+      store.getState().get('assessment').get('view') !== 'practice2') {
       localStorage.state = JSON.stringify(store.getState().toJS());
     }
-    return;
+    return returnValue;
   };
 }

@@ -63,7 +63,7 @@ export function nextPractice(currentView) {
 // expects delay to be in seconds
 export function setTimerForPrompt(delay) {
   return dispatch => {
-    setTimeout(() => {
+    return setTimeout(() => {
       dispatch({ type: READY_PROMPT });
     }, (delay > 0) ? delay * 1000 : 0);
   };

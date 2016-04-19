@@ -5,6 +5,7 @@ import Header from './header/Header';
 import TabbedWindow from './content/TabbedWindow';
 import Modal from './modal/Modal';
 import { newPrompt } from '../modules/common';
+import { setTimerForPrompt } from '../modules/assessment';
 import { toggleModal } from '../modules/display';
 import { delaySelector } from '../modules/data';
 
@@ -14,6 +15,7 @@ const App = (props) => {
       <Header delay={props.delay}
         lastReintro={props.lastReintroduced}
         view={props.view}
+        setTimer={props.setTimerForPrompt}
       />
       <TabbedWindow tab={props.tab} view={props.view} />
       <Modal modal={props.modal} onToggle={props.toggleModal} newPrompt={props.newPrompt} />
@@ -29,6 +31,7 @@ App.propTypes = {
   lastReintroduced: React.PropTypes.number,
   toggleModal: React.PropTypes.func.isRequired,
   newPrompt: React.PropTypes.func.isRequired,
+  setTimerForPrompt: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -40,7 +43,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return Redux.bindActionCreators({ toggleModal, newPrompt }, dispatch);
+  return Redux.bindActionCreators({
+    toggleModal, newPrompt, setTimerForPrompt,
+  }, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

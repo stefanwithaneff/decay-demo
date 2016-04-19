@@ -31,7 +31,8 @@ const defaultState = Immutable.Map({
 let initialState = defaultState;
 if (typeof Storage !== 'undefined') {
   if (localStorage.state !== undefined) {
-    initialState = Immutable.fromJS(JSON.parse(localStorage.state));
+    initialState = Immutable.fromJS(JSON.parse(localStorage.state))
+      .setIn(['display', 'modal'], false); // Closes modal if saved in open state
   }
 }
 
