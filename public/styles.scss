@@ -5,10 +5,12 @@ $incorrect-color: hsla(0, 100%, 70%, 1);
 
 $interactive-color: hsla(209, 100%, 50%, 1);
 $inactive-color: hsla(209, 25%, 25%, 1);
+$error-color: red;
 
 $primary-color: hsla(209, 10%, 95%, 1);
 $secondary-color: white;
 $accent-color: hsla(209, 10%, 75%, 1);
+$darken-color: hsla(209, 10%, 10%, 0.7);
 
 $break-small: 560px;
 $break-med: 800px;
@@ -197,10 +199,10 @@ header {
       border: 1px solid $accent-color;
       user-select: none;
       cursor: default;
-      background-color: white;
+      background-color: $secondary-color;
 
       &.score-0, &.score-1, &.score-2 {
-        color: white;
+        color: $secondary-color;
       }
 
       &.score-2 {
@@ -254,7 +256,7 @@ header {
         border: 0;
         margin: 0 1rem;
         font-size: 1rem;
-        color: white;
+        color: $secondary-color;
         background-color: $interactive-color;
         cursor: pointer;
       }
@@ -264,14 +266,100 @@ header {
         height: 1rem;
         width: 100%;
         text-align: left;
-        color: red;
+        color: $error-color;
+      }
+    }
+  }
+
+  .modal-toggle {
+    width: 80%;
+    padding: 0.5rem;
+    margin: 0 auto;
+    text-align: right;
+    color: $interactive-color;
+
+    @media (max-width: $break-med) {
+      width: 90%;
+    }
+
+    span {
+      cursor: pointer;
+
+      &:hover {
+        color: $inactive-color;
       }
     }
   }
 }
 
-/* Footer Styles */
-footer {
-  padding: 0.5rem;
-  color: $interactive-color;
+/* Modal Styles */
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: $darken-color;
+  z-index: 2;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.modal {
+  width: 50%;
+  padding: 40px;
+  background-color: $primary-color;
+  opacity: 1;
+  transform: translateY(-5vh);
+  transition: transform 0.3s 0.3s, opacity 0.3s 0.3s;
+
+  &-info {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }
+
+  &-options {
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  &-buttons {
+    text-align: center;
+
+    button {
+      padding: 0.5rem;
+      border: 0;
+      margin: 0 0.5rem 1rem 0.5rem;
+      font-size: 1rem;
+      color: $secondary-color;
+      cursor: pointer;
+
+      &.new {
+        background-color: $interactive-color;
+      }
+
+      &.toggle {
+        background-color: $error-color;
+      }
+    }
+  }
+
+  &-warning {
+    font-size: 0.8rem;
+    color: $error-color;
+  }
+}
+
+.modal-container.hidden {
+  visibility: hidden;
+  opacity: 0;
+
+  .modal {
+    opacity: 0;
+    transform: none;
+  }
 }

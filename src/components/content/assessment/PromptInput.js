@@ -39,8 +39,12 @@ export default class PromptInput extends React.Component {
   }
 
   // Clear input field on view transitions
+  // Empty autofill field if prompt changes
   componentDidUpdate(prevProps) {
     this.input.value = (this.props.view !== prevProps.view) ? '' : this.input.value;
+    if (prevProps.prompt !== this.props.prompt) {
+      this.fakeInput.value = '';
+    }
   }
 
   // Return score and k value as an array
