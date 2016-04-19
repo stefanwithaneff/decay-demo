@@ -5,8 +5,9 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import Immutable from 'immutable';
 import rootReducer from './modules';
-import { newPrompt } from './modules/common';
 import App from './components';
+import { newPrompt } from './modules/common';
+import reduxLocalStore from './utils/reduxLocalStore';
 
 /* eslint-disable new-cap */
 const defaultState = Immutable.Map({
@@ -34,7 +35,9 @@ if (typeof Storage !== 'undefined') {
   }
 }
 
-const store = Redux.createStore(rootReducer, initialState, Redux.applyMiddleware(thunk));
+const store = Redux.createStore(rootReducer,
+  initialState,
+  Redux.applyMiddleware(thunk, reduxLocalStore));
 
 ReactDOM.render(
   <Provider store={store}>

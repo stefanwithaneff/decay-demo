@@ -1594,12 +1594,16 @@
       }
 
       // Clear input field on view transitions
+      // Empty autofill field if prompt changes
 
 
       babelHelpers.createClass(PromptInput, [{
         key: 'componentDidUpdate',
         value: function componentDidUpdate(prevProps) {
           this.input.value = this.props.view !== prevProps.view ? '' : this.input.value;
+          if (prevProps.prompt !== this.props.prompt) {
+            this.fakeInput.value = '';
+          }
         }
 
         // Return score and k value as an array
@@ -1779,17 +1783,35 @@
     var ModalToggle = function ModalToggle(props) {
       return React.createElement(
         'div',
-        null,
-        React.createElement('span', { 'class': 'modal-toggle' })
+        { className: 'modal-toggle' },
+        React.createElement(
+          'span',
+          { onClick: function onClick() {
+              return props.toggleModal();
+            } },
+          'New Prompt'
+        )
       );
     };
+
+    ModalToggle.propTypes = {
+      toggleModal: React.PropTypes.func.isRequired
+    };
+
+    function mapDispatchToProps$3(dispatch) {
+      return {
+        toggleModal: Redux.bindActionCreators(toggleModal, dispatch)
+      };
+    }
+
+    var ModalToggle$1 = connect(null, mapDispatchToProps$3)(ModalToggle);
 
     var Assessment = function Assessment() {
       return React.createElement(
         'div',
         { className: 'content assessment' },
         React.createElement(Prompt$1, null),
-        React.createElement(ModalToggle, null)
+        React.createElement(ModalToggle$1, null)
       );
     };
 
@@ -1819,27 +1841,106 @@
       tab: React.PropTypes.number.isRequired
     };
 
-    var Footer = function Footer(props) {
-      return React.createElement(
-        'div',
-        null,
-        'Footer'
-      );
-    };
+    var Modal = function (_React$Component) {
+      babelHelpers.inherits(Modal, _React$Component);
 
-    var Modal = function Modal(props) {
-      return React.createElement(
-        'div',
-        { onClick: function onClick() {
-            return props.onToggle();
-          } },
-        props.modal ? 'true' : 'false'
-      );
-    };
+      function Modal(props) {
+        babelHelpers.classCallCheck(this, Modal);
+
+        var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Modal).call(this, props));
+
+        _this.onNew = _this.onNew.bind(_this);
+        return _this;
+      }
+
+      // Resets radio buttons when modal is opened
+
+
+      babelHelpers.createClass(Modal, [{
+        key: 'componentWillUpdate',
+        value: function componentWillUpdate(newProps) {
+          if (newProps.modal && !this.props.modal) {
+            var option = this.radioDiv.querySelector('input:checked');
+            if (option) option.checked = false;
+          }
+        }
+      }, {
+        key: 'onNew',
+        value: function onNew() {
+          this.props.newPrompt(Number(this.radioDiv.querySelector('input:checked').value));
+        }
+      }, {
+        key: 'render',
+        value: function render() {
+          var _this2 = this;
+
+          return React.createElement(
+            'div',
+            { className: this.props.modal ? 'modal-container' : 'modal-container hidden' },
+            React.createElement(
+              'div',
+              { className: 'modal' },
+              React.createElement(
+                'h2',
+                { className: 'modal-info' },
+                'Choose a character length for the new prompt'
+              ),
+              React.createElement(
+                'div',
+                { ref: function ref(e) {
+                    _this2.radioDiv = e;
+                  }, className: 'modal-options' },
+                React.createElement('input', { id: 'short', type: 'radio', name: 'length', value: '12' }),
+                React.createElement(
+                  'label',
+                  { htmlFor: 'short' },
+                  'Short'
+                ),
+                React.createElement('br', null),
+                React.createElement('input', { id: 'med', type: 'radio', name: 'length', value: '16' }),
+                React.createElement(
+                  'label',
+                  { htmlFor: 'med' },
+                  'Medium'
+                ),
+                React.createElement('br', null),
+                React.createElement('input', { id: 'long', type: 'radio', name: 'length', value: '20' }),
+                React.createElement(
+                  'label',
+                  { htmlFor: 'long' },
+                  'Long'
+                )
+              ),
+              React.createElement(
+                'div',
+                { className: 'modal-buttons' },
+                React.createElement(
+                  'button',
+                  { className: 'new', onClick: this.onNew },
+                  'New Prompt'
+                ),
+                React.createElement(
+                  'button',
+                  { className: 'toggle', onClick: this.props.onToggle },
+                  'Cancel'
+                )
+              ),
+              React.createElement(
+                'div',
+                { className: 'modal-warning' },
+                'Warning: Generating a new prompt will delete all current data.'
+              )
+            )
+          );
+        }
+      }]);
+      return Modal;
+    }(React.Component);
 
     Modal.propTypes = {
       modal: React.PropTypes.bool.isRequired,
-      onToggle: React.PropTypes.func.isRequired
+      onToggle: React.PropTypes.func.isRequired,
+      newPrompt: React.PropTypes.func.isRequired
     };
 
     var App = function App(props) {
@@ -1851,8 +1952,7 @@
           view: props.view
         }),
         React.createElement(TabbedWindow, { tab: props.tab, view: props.view }),
-        React.createElement(Footer, { onToggle: props.toggleModal }),
-        React.createElement(Modal, { modal: props.modal, onToggle: props.toggleModal })
+        React.createElement(Modal, { modal: props.modal, onToggle: props.toggleModal, newPrompt: props.newPrompt })
       );
     };
 
@@ -1862,7 +1962,8 @@
       view: React.PropTypes.string.isRequired,
       delay: React.PropTypes.number.isRequired,
       lastReintroduced: React.PropTypes.number,
-      toggleModal: React.PropTypes.func.isRequired
+      toggleModal: React.PropTypes.func.isRequired,
+      newPrompt: React.PropTypes.func.isRequired
     };
 
     var mapStateToProps = function mapStateToProps(state) {
@@ -1876,7 +1977,7 @@
     };
 
     var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-      return Redux.bindActionCreators({ toggleModal: toggleModal }, dispatch);
+      return Redux.bindActionCreators({ toggleModal: toggleModal, newPrompt: newPrompt }, dispatch);
     };
 
     var App$1 = connect(mapStateToProps, mapDispatchToProps)(App);
@@ -1889,8 +1990,7 @@
         return function (action) {
           next(action);
           if (typeof Storage !== 'undefined' && ['wait', 'score'].indexOf(store.getState().get('assessment').get('view')) !== -1) {
-            console.log(store.getState().toJS());
-            // localStorage.state = JSON.stringify(store.getState().toJS());
+            localStorage.state = JSON.stringify(store.getState().toJS());
           }
           return;
         };
