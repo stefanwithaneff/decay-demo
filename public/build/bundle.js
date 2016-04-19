@@ -2026,10 +2026,20 @@
     });
     /* eslint-enable */
 
+    // Attempt to load initial state from HTML5 LocalStorage API
     var initialState = defaultState;
     if (typeof Storage !== 'undefined') {
       if (localStorage.state !== undefined) {
-        initialState = Immutable.fromJS(JSON.parse(localStorage.state)).setIn(['display', 'modal'], false); // Closes modal if saved in open state
+        initialState = Immutable.fromJS(JSON.parse(localStorage.state), function (key, value) {
+          var isIndexed = Immutable.Iterable.isIndexed(value);
+          if (isIndexed) {
+            if (key !== 'scores' && key !== 'data') {
+              return value.toArray();
+            }
+            return value.toList();
+          }
+          return value.toMap();
+        }).setIn(['display', 'modal'], false); // Closes modal if saved in open state
       }
     }
 
