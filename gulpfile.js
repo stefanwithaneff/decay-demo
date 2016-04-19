@@ -49,7 +49,7 @@ gulp.task('bundle', () => {
 gulp.task('sass', () => {
   return gulp.src('./public/styles.scss')
     .pipe(sass().on('error', sass.logError))
-    .pipe(autoprefixer({ browsers: ['> 10%'] }))
+    .pipe(autoprefixer({ browsers: ['> 1%'] }))
     .pipe(gulp.dest('./public/build'));
 });
 

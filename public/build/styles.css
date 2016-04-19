@@ -50,8 +50,10 @@ table {
 * {
   box-sizing: border-box; }
 
-@media (min-resolution: 192dpi) {
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   html {
+    -webkit-text-size-adjust: none;
+            text-size-adjust: none;
     font-size: 24px; } }
 
 #app {
@@ -136,6 +138,8 @@ header {
   padding: 0.5rem;
   border: 1px solid #b9bfc6;
   -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
           user-select: none;
   cursor: default;
   background-color: white; }
@@ -147,6 +151,7 @@ header {
     background-color: #ff6666; }
 
 .assessment .prompt-main .prompt-input {
+  display: -webkit-box;
   display: flex;
   flex-flow: row wrap;
   position: relative; }
@@ -163,13 +168,15 @@ header {
       color: gray;
       font-style: italic; }
   .assessment .prompt-main .prompt-input input {
-    flex-grow: 5;
+    -webkit-box-flex: 5;
+            flex-grow: 5;
     font-size: 1.5rem;
     font-family: monospace; }
     .assessment .prompt-main .prompt-input input.real {
       background-color: transparent; }
   .assessment .prompt-main .prompt-input button {
-    flex-grow: 1;
+    -webkit-box-flex: 1;
+            flex-grow: 1;
     border: 0;
     margin: 0 1rem;
     font-size: 1rem;
@@ -177,7 +184,8 @@ header {
     background-color: #0084ff;
     cursor: pointer; }
   .assessment .prompt-main .prompt-input .prompt-error {
-    flex-grow: 0;
+    -webkit-box-flex: 0;
+            flex-grow: 0;
     height: 1rem;
     width: 100%;
     text-align: left;

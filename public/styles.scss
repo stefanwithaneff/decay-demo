@@ -69,6 +69,7 @@ table {
 
 html {
   @media (min-resolution: 192dpi) {
+    text-size-adjust: none;
     font-size: 24px;
   }
 }
