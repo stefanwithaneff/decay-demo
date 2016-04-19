@@ -1,6 +1,6 @@
 // Helper function: Clones action object while stripping meta property
 function cloneActionSansDelay(action) {
-  let copy = {};
+  let copy = {}; // eslint-disable-line prefer-const
   Object.keys(action).forEach((key) => {
     copy[key] = action[key];
     if (key === 'meta') {

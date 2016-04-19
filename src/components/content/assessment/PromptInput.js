@@ -44,6 +44,8 @@ export default class PromptInput extends React.Component {
     this.input.value = (this.props.view !== prevProps.view) ? '' : this.input.value;
     if (prevProps.prompt !== this.props.prompt && prevProps.prompt !== 'practice') {
       this.fakeInput.value = '';
+    } else {
+      this.autoFill();
     }
   }
 
@@ -61,7 +63,10 @@ export default class PromptInput extends React.Component {
   }
 
   autoFill() {
-    if (this.props.view === 'prompt') return;
+    if (this.props.view === 'prompt' || this.props.view === 'score') {
+      this.fakeInput.value = '';
+      return;
+    }
     this.fakeInput.value = this.props.prompt.split('').map((char, i) => {
       if (i < this.input.value.length) return ' ';
       return char;

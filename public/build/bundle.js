@@ -1614,6 +1614,8 @@
           this.input.value = this.props.view !== prevProps.view ? '' : this.input.value;
           if (prevProps.prompt !== this.props.prompt && prevProps.prompt !== 'practice') {
             this.fakeInput.value = '';
+          } else {
+            this.autoFill();
           }
         }
 
@@ -1640,7 +1642,10 @@
         value: function autoFill() {
           var _this2 = this;
 
-          if (this.props.view === 'prompt') return;
+          if (this.props.view === 'prompt' || this.props.view === 'score') {
+            this.fakeInput.value = '';
+            return;
+          }
           this.fakeInput.value = this.props.prompt.split('').map(function (char, i) {
             if (i < _this2.input.value.length) return ' ';
             return char;
@@ -1985,7 +1990,7 @@
 
     // Helper function: Clones action object while stripping meta property
     function cloneActionSansDelay(action) {
-      var copy = {};
+      var copy = {}; // eslint-disable-line prefer-const
       Object.keys(action).forEach(function (key) {
         copy[key] = action[key];
         if (key === 'meta') {
