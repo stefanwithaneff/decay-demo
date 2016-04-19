@@ -198,6 +198,7 @@ header {
 
 .assessment .modal-toggle {
   width: 80%;
+  max-width: 800px;
   padding: 0.5rem;
   margin: 0 auto;
   text-align: right;

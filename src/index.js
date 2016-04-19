@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Redux from 'redux';
-import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import Immutable from 'immutable';
 import rootReducer from './modules';
 import App from './components';
 import { newPrompt } from './modules/common';
 import reduxLocalStore from './utils/reduxLocalStore';
+import timerMngr from './utils/reduxTimerMgmt';
 
 /* eslint-disable new-cap */
 const defaultState = Immutable.Map({
@@ -47,7 +47,7 @@ if (typeof Storage !== 'undefined') {
 
 const store = Redux.createStore(rootReducer,
   initialState,
-  Redux.applyMiddleware(thunk, reduxLocalStore));
+  Redux.applyMiddleware(reduxLocalStore, timerMngr));
 
 ReactDOM.render(
   <Provider store={store}>

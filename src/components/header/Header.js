@@ -2,24 +2,13 @@ import React from 'react';
 import Timer from './Timer';
 import TabNavigator from './TabNavigator';
 
-const Header = (props) => {
+const Header = () => {
   return (
     <header>
-      <Timer delay={props.delay}
-        lastReintro={props.lastReintro}
-        view={props.view}
-        setTimer={props.setTimer}
-      />
+      <Timer />
       <TabNavigator />
     </header>
   );
-};
-
-Header.propTypes = {
-  delay: React.PropTypes.number.isRequired,
-  lastReintro: React.PropTypes.number,
-  view: React.PropTypes.string.isRequired,
-  setTimer: React.PropTypes.func.isRequired,
 };
 
 export default Header;

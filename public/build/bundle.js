@@ -76,21 +76,6 @@
 
     babelHelpers;
 
-    function thunkMiddleware(_ref) {
-      var dispatch = _ref.dispatch;
-      var getState = _ref.getState;
-
-      return function (next) {
-        return function (action) {
-          if (typeof action === 'function') {
-            return action(dispatch, getState);
-          }
-
-          return next(action);
-        };
-      };
-    }
-
     var browser = __commonjs(function (module) {
       /**
        * Copyright 2013-2015, Facebook, Inc.
@@ -1232,12 +1217,12 @@
     }
 
     // Action Creator: Sets timer for view transition to unassisted prompt
-    // expects delay to be in seconds
     function setTimerForPrompt(delay) {
-      return function (dispatch) {
-        return setTimeout(function () {
-          dispatch({ type: READY_PROMPT });
-        }, delay > 0 ? delay * 1000 : 0);
+      return {
+        type: READY_PROMPT,
+        meta: {
+          delay: delay
+        }
       };
     }
 
@@ -1316,13 +1301,26 @@
       babelHelpers.createClass(Timer, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-          // Set timer if app is reloaded in waiting state
+          // Set timer if app is reloaded in waiting view
           if (this.props.view === 'wait') {
-            this.props.setTimer(this.props.delay - (Date.now() - this.props.lastReintro) / 1000);
+            this.cancelTimer = this.props.setTimer(this.props.delay - (Date.now() - this.props.lastReintro) / 1000);
           }
 
           // Initialize timer render loop
           requestAnimationFrame(this.changeTime);
+        }
+      }, {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+          // Cancels prompt timer if new prompt is generated
+          if (this.cancelTimer && this.props.prompt !== nextProps.prompt) {
+            this.cancelTimer();
+          }
+
+          // Set timer when app transitions to the waiting view
+          if (this.props.view !== 'wait' && nextProps.view === 'wait') {
+            this.cancelTimer = this.props.setTimer(this.props.delay);
+          }
         }
 
         // Uses ref to display derived 'Time Remaining' state
@@ -1381,8 +1379,26 @@
       delay: React.PropTypes.number.isRequired,
       lastReintro: React.PropTypes.number,
       view: React.PropTypes.string.isRequired,
+      prompt: React.PropTypes.string.isRequired,
       setTimer: React.PropTypes.func.isRequired
     };
+
+    function mapStateToProps$1(state) {
+      return {
+        delay: delaySelector(state),
+        lastReintro: state.get('assessment').get('lastReintroduced'),
+        view: state.get('assessment').get('view'),
+        prompt: state.get('assessment').get('prompt')
+      };
+    }
+
+    function mapDispatchToProps$1(dispatch) {
+      return {
+        setTimer: Redux.bindActionCreators(setTimerForPrompt, dispatch)
+      };
+    }
+
+    var Timer$1 = connect(mapStateToProps$1, mapDispatchToProps$1)(Timer);
 
     var Tab = function Tab(props) {
       return React.createElement(
@@ -1403,19 +1419,19 @@
       onTabSelect: React.PropTypes.func.isRequired
     };
 
-    var mapStateToProps$1 = function mapStateToProps(state) {
+    var mapStateToProps$2 = function mapStateToProps(state) {
       return {
         tab: state.get('display').get('tab')
       };
     };
 
-    var mapDispatchToProps$1 = function mapDispatchToProps(dispatch) {
+    var mapDispatchToProps$2 = function mapDispatchToProps(dispatch) {
       return {
         onTabSelect: Redux.bindActionCreators(changeTab, dispatch)
       };
     };
 
-    var Tab$1 = connect(mapStateToProps$1, mapDispatchToProps$1)(Tab);
+    var Tab$1 = connect(mapStateToProps$2, mapDispatchToProps$2)(Tab);
 
     var TabNavigator = function TabNavigator() {
       return React.createElement(
@@ -1439,24 +1455,13 @@
       );
     };
 
-    var Header = function Header(props) {
+    var Header = function Header() {
       return React.createElement(
         'header',
         null,
-        React.createElement(Timer, { delay: props.delay,
-          lastReintro: props.lastReintro,
-          view: props.view,
-          setTimer: props.setTimer
-        }),
+        React.createElement(Timer$1, null),
         React.createElement(TabNavigator, null)
       );
-    };
-
-    Header.propTypes = {
-      delay: React.PropTypes.number.isRequired,
-      lastReintro: React.PropTypes.number,
-      view: React.PropTypes.string.isRequired,
-      setTimer: React.PropTypes.func.isRequired
     };
 
     var PromptInfo = function (_React$Component) {
@@ -1607,7 +1612,7 @@
         key: 'componentDidUpdate',
         value: function componentDidUpdate(prevProps) {
           this.input.value = this.props.view !== prevProps.view ? '' : this.input.value;
-          if (prevProps.prompt !== this.props.prompt) {
+          if (prevProps.prompt !== this.props.prompt && prevProps.prompt !== 'practice') {
             this.fakeInput.value = '';
           }
         }
@@ -1723,41 +1728,20 @@
       nextPractice: React.PropTypes.func.isRequired
     };
 
-    var Prompt = function (_React$Component) {
-      babelHelpers.inherits(Prompt, _React$Component);
-
-      function Prompt() {
-        babelHelpers.classCallCheck(this, Prompt);
-        return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Prompt).apply(this, arguments));
-      }
-
-      babelHelpers.createClass(Prompt, [{
-        key: 'componentDidUpdate',
-        value: function componentDidUpdate(prevProps) {
-          // Set timer for next view transition if waiting
-          if (this.props.view === 'wait' && prevProps.view !== 'wait') {
-            this.props.setTimerForPrompt(this.props.delay);
-          }
-        }
-      }, {
-        key: 'render',
-        value: function render() {
-          return React.createElement(
-            'div',
-            { className: 'prompt-main ' + this.props.view },
-            React.createElement(PromptInfo, { view: this.props.view, score: this.props.score }),
-            React.createElement(PromptString, { prompt: this.props.prompt, view: this.props.view, score: this.props.score }),
-            React.createElement(PromptInput, { prompt: this.props.prompt,
-              lastReintro: this.props.lastReintro,
-              view: this.props.view,
-              logData: this.props.logData,
-              nextPractice: this.props.nextPractice
-            })
-          );
-        }
-      }]);
-      return Prompt;
-    }(React.Component);
+    var Prompt = function Prompt(props) {
+      return React.createElement(
+        'div',
+        { className: 'prompt-main ' + props.view },
+        React.createElement(PromptInfo, { view: props.view, score: props.score }),
+        React.createElement(PromptString, { prompt: props.prompt, view: props.view, score: props.score }),
+        React.createElement(PromptInput, { prompt: props.prompt,
+          lastReintro: props.lastReintro,
+          view: props.view,
+          logData: props.logData,
+          nextPractice: props.nextPractice
+        })
+      );
+    };
 
     Prompt.propTypes = {
       prompt: React.PropTypes.string.isRequired,
@@ -1770,7 +1754,7 @@
       setTimerForPrompt: React.PropTypes.func.isRequired
     };
 
-    var mapStateToProps$2 = function mapStateToProps(state) {
+    var mapStateToProps$3 = function mapStateToProps(state) {
       return {
         prompt: state.get('assessment').get('prompt'),
         lastReintro: state.get('assessment').get('lastReintroduced'),
@@ -1780,11 +1764,11 @@
       };
     };
 
-    var mapDispatchToProps$2 = function mapDispatchToProps(dispatch) {
+    var mapDispatchToProps$3 = function mapDispatchToProps(dispatch) {
       return Redux.bindActionCreators({ logData: logData, nextPractice: nextPractice, setTimerForPrompt: setTimerForPrompt }, dispatch);
     };
 
-    var Prompt$1 = connect(mapStateToProps$2, mapDispatchToProps$2)(Prompt);
+    var Prompt$1 = connect(mapStateToProps$3, mapDispatchToProps$3)(Prompt);
 
     var ModalToggle = function ModalToggle(props) {
       return React.createElement(
@@ -1804,13 +1788,13 @@
       toggleModal: React.PropTypes.func.isRequired
     };
 
-    function mapDispatchToProps$3(dispatch) {
+    function mapDispatchToProps$4(dispatch) {
       return {
         toggleModal: Redux.bindActionCreators(toggleModal, dispatch)
       };
     }
 
-    var ModalToggle$1 = connect(null, mapDispatchToProps$3)(ModalToggle);
+    var ModalToggle$1 = connect(null, mapDispatchToProps$4)(ModalToggle);
 
     var Assessment = function Assessment() {
       return React.createElement(
@@ -1953,11 +1937,7 @@
       return React.createElement(
         'div',
         { className: 'container' },
-        React.createElement(Header, { delay: props.delay,
-          lastReintro: props.lastReintroduced,
-          view: props.view,
-          setTimer: props.setTimerForPrompt
-        }),
+        React.createElement(Header, null),
         React.createElement(TabbedWindow, { tab: props.tab, view: props.view }),
         React.createElement(Modal, { modal: props.modal, onToggle: props.toggleModal, newPrompt: props.newPrompt })
       );
@@ -1967,11 +1947,8 @@
       tab: React.PropTypes.number.isRequired,
       modal: React.PropTypes.bool.isRequired,
       view: React.PropTypes.string.isRequired,
-      delay: React.PropTypes.number.isRequired,
-      lastReintroduced: React.PropTypes.number,
       toggleModal: React.PropTypes.func.isRequired,
-      newPrompt: React.PropTypes.func.isRequired,
-      setTimerForPrompt: React.PropTypes.func.isRequired
+      newPrompt: React.PropTypes.func.isRequired
     };
 
     var mapStateToProps = function mapStateToProps(state) {
@@ -1979,21 +1956,20 @@
         tab: state.get('display').get('tab'),
         modal: state.get('display').get('modal'),
         view: state.get('assessment').get('view'),
-        delay: delaySelector(state),
         lastReintroduced: state.get('assessment').get('lastReintroduced')
       };
     };
 
     var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-      return Redux.bindActionCreators({
-        toggleModal: toggleModal, newPrompt: newPrompt, setTimerForPrompt: setTimerForPrompt
-      }, dispatch);
+      return Redux.bindActionCreators({ toggleModal: toggleModal, newPrompt: newPrompt }, dispatch);
     };
 
     var App$1 = connect(mapStateToProps, mapDispatchToProps)(App);
 
     /*
      * Redux Local Storage Middleware
+     *
+     * Saves data locally on each view transition (excluding practice2)
      */
     function reduxLocalStore(store) {
       return function (next) {
@@ -2003,6 +1979,50 @@
             localStorage.state = JSON.stringify(store.getState().toJS());
           }
           return returnValue;
+        };
+      };
+    }
+
+    // Helper function: Clones action object while stripping meta property
+    function cloneActionSansDelay(action) {
+      var copy = {};
+      Object.keys(action).forEach(function (key) {
+        copy[key] = action[key];
+        if (key === 'meta') {
+          copy[key].delay = undefined;
+        }
+      });
+
+      return copy;
+    }
+
+    /*
+     * Redux Timer Management Middleware
+     *
+     * Sets a timer for an action if the action has a delay property
+     * Expects delay to be in seconds
+     * Returns a function wrapper for cancelling the timeout
+     *
+     */
+    function timerMgmtMiddleware() {
+      return function (next) {
+        return function (action) {
+          if (action.meta && action.meta.delay) {
+            var _ret = function () {
+              var timer = setTimeout(function () {
+                return next(cloneActionSansDelay(action));
+              }, action.meta.delay > 0 ? action.meta.delay * 1000 : 0);
+
+              return {
+                v: function v() {
+                  return clearTimeout(timer);
+                }
+              };
+            }();
+
+            if ((typeof _ret === 'undefined' ? 'undefined' : babelHelpers.typeof(_ret)) === "object") return _ret.v;
+          }
+          return next(action);
         };
       };
     }
@@ -2043,7 +2063,7 @@
       }
     }
 
-    var store = Redux.createStore(rootReducer, initialState, Redux.applyMiddleware(thunkMiddleware, reduxLocalStore));
+    var store = Redux.createStore(rootReducer, initialState, Redux.applyMiddleware(reduxLocalStore, timerMgmtMiddleware));
 
     ReactDOM.render(React.createElement(
       Provider,

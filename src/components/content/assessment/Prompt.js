@@ -8,29 +8,20 @@ import { logData } from '../../../modules/common';
 import { nextPractice, setTimerForPrompt } from '../../../modules/assessment';
 import { delaySelector } from '../../../modules/data';
 
-class Prompt extends React.Component {
-  componentDidUpdate(prevProps) {
-    // Set timer for next view transition if waiting
-    if (this.props.view === 'wait' && prevProps.view !== 'wait') {
-      this.props.setTimerForPrompt(this.props.delay);
-    }
-  }
-
-  render() {
-    return (
-      <div className={`prompt-main ${this.props.view}`}>
-        <PromptInfo view={this.props.view} score={this.props.score} />
-        <PromptString prompt={this.props.prompt} view={this.props.view} score={this.props.score} />
-        <PromptInput prompt={this.props.prompt}
-          lastReintro={this.props.lastReintro}
-          view={this.props.view}
-          logData={this.props.logData}
-          nextPractice={this.props.nextPractice}
-        />
-      </div>
-    );
-  }
-}
+const Prompt = (props) => {
+  return (
+    <div className={`prompt-main ${props.view}`}>
+      <PromptInfo view={props.view} score={props.score} />
+      <PromptString prompt={props.prompt} view={props.view} score={props.score} />
+      <PromptInput prompt={props.prompt}
+        lastReintro={props.lastReintro}
+        view={props.view}
+        logData={props.logData}
+        nextPractice={props.nextPractice}
+      />
+    </div>
+  );
+};
 
 Prompt.propTypes = {
   prompt: React.PropTypes.string.isRequired,

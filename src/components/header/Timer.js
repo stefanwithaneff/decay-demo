@@ -1,19 +1,36 @@
 import React from 'react';
+import Redux from 'redux';
+import { connect } from 'react-redux';
+import { setTimerForPrompt } from '../../modules/assessment';
+import { delaySelector } from '../../modules/data';
 
-export default class Timer extends React.Component {
+class Timer extends React.Component {
   constructor(props) {
     super(props);
     this.changeTime = this.changeTime.bind(this);
   }
 
   componentDidMount() {
-    // Set timer if app is reloaded in waiting state
+    // Set timer if app is reloaded in waiting view
     if (this.props.view === 'wait') {
-      this.props.setTimer(this.props.delay - (Date.now() - this.props.lastReintro) / 1000);
+      this.cancelTimer = this.props.setTimer(this.props.delay -
+        (Date.now() - this.props.lastReintro) / 1000);
     }
 
     // Initialize timer render loop
     requestAnimationFrame(this.changeTime);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // Cancels prompt timer if new prompt is generated
+    if (this.cancelTimer && this.props.prompt !== nextProps.prompt) {
+      this.cancelTimer();
+    }
+
+    // Set timer when app transitions to the waiting view
+    if (this.props.view !== 'wait' && nextProps.view === 'wait') {
+      this.cancelTimer = this.props.setTimer(this.props.delay);
+    }
   }
 
   // Uses ref to display derived 'Time Remaining' state
@@ -67,5 +84,23 @@ Timer.propTypes = {
   delay: React.PropTypes.number.isRequired,
   lastReintro: React.PropTypes.number,
   view: React.PropTypes.string.isRequired,
+  prompt: React.PropTypes.string.isRequired,
   setTimer: React.PropTypes.func.isRequired,
 };
+
+function mapStateToProps(state) {
+  return {
+    delay: delaySelector(state),
+    lastReintro: state.get('assessment').get('lastReintroduced'),
+    view: state.get('assessment').get('view'),
+    prompt: state.get('assessment').get('prompt'),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setTimer: Redux.bindActionCreators(setTimerForPrompt, dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Timer);

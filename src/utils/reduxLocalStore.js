@@ -1,5 +1,7 @@
 /*
  * Redux Local Storage Middleware
+ *
+ * Saves data locally on each view transition (excluding practice2)
  */
 export default function reduxLocalStore(store) {
   return next => action => {

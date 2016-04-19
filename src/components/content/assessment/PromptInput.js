@@ -42,7 +42,7 @@ export default class PromptInput extends React.Component {
   // Empty autofill field if prompt changes
   componentDidUpdate(prevProps) {
     this.input.value = (this.props.view !== prevProps.view) ? '' : this.input.value;
-    if (prevProps.prompt !== this.props.prompt) {
+    if (prevProps.prompt !== this.props.prompt && prevProps.prompt !== 'practice') {
       this.fakeInput.value = '';
     }
   }

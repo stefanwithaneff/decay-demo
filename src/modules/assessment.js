@@ -60,11 +60,11 @@ export function nextPractice(currentView) {
 }
 
 // Action Creator: Sets timer for view transition to unassisted prompt
-// expects delay to be in seconds
 export function setTimerForPrompt(delay) {
-  return dispatch => {
-    return setTimeout(() => {
-      dispatch({ type: READY_PROMPT });
-    }, (delay > 0) ? delay * 1000 : 0);
+  return {
+    type: READY_PROMPT,
+    meta: {
+      delay,
+    },
   };
 }
