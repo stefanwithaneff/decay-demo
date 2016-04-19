@@ -1237,7 +1237,7 @@
       return function (dispatch) {
         setTimeout(function () {
           dispatch({ type: READY_PROMPT });
-        }, delay * 1000);
+        }, delay > 0 ? delay * 1000 : 0);
       };
     }
 
@@ -1316,6 +1316,12 @@
       babelHelpers.createClass(Timer, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
+          // Set timer if app is reloaded in waiting state
+          if (this.props.view === 'wait') {
+            setTimerForPrompt(this.props.delay - (Date.now() - this.props.lastReintro));
+          }
+
+          // Initialize timer render loop
           requestAnimationFrame(this.changeTime);
         }
 
@@ -1770,27 +1776,36 @@
 
     var Prompt$1 = connect(mapStateToProps$2, mapDispatchToProps$2)(Prompt);
 
+    var ModalToggle = function ModalToggle(props) {
+      return React.createElement(
+        'div',
+        null,
+        React.createElement('span', { 'class': 'modal-toggle' })
+      );
+    };
+
     var Assessment = function Assessment() {
       return React.createElement(
         'div',
         { className: 'content assessment' },
-        React.createElement(Prompt$1, null)
+        React.createElement(Prompt$1, null),
+        React.createElement(ModalToggle, null)
       );
     };
 
     var Data = function Data() {
       return React.createElement(
-        'div',
-        null,
-        'Data'
+        "div",
+        { className: "content data" },
+        "Data"
       );
     };
 
     var History = function History() {
       return React.createElement(
-        'div',
-        null,
-        'History'
+        "div",
+        { className: "content history" },
+        "History"
       );
     };
 
@@ -1866,6 +1881,22 @@
 
     var App$1 = connect(mapStateToProps, mapDispatchToProps)(App);
 
+    /*
+     * Redux Local Storage Middleware
+     */
+    function reduxLocalStore(store) {
+      return function (next) {
+        return function (action) {
+          next(action);
+          if (typeof Storage !== 'undefined' && ['wait', 'score'].indexOf(store.getState().get('assessment').get('view')) !== -1) {
+            console.log(store.getState().toJS());
+            // localStorage.state = JSON.stringify(store.getState().toJS());
+          }
+          return;
+        };
+      };
+    }
+
     /* eslint-disable new-cap */
     var defaultState = Immutable.Map({
       data: Immutable.List(),
@@ -1892,7 +1923,7 @@
       }
     }
 
-    var store = Redux.createStore(rootReducer, initialState, Redux.applyMiddleware(thunkMiddleware));
+    var store = Redux.createStore(rootReducer, initialState, Redux.applyMiddleware(thunkMiddleware, reduxLocalStore));
 
     ReactDOM.render(React.createElement(
       Provider,

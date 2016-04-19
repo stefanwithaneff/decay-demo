@@ -54,7 +54,7 @@ table {
   html {
     -webkit-text-size-adjust: none;
             text-size-adjust: none;
-    font-size: 24px; } }
+    font-size: 20px; } }
 
 #app {
   font-family: "Roboto", sans-serif;
@@ -104,6 +104,9 @@ header {
   margin: 0 auto;
   background-color: #f1f2f4;
   box-shadow: 0 0.25rem 0.5rem #b9bfc6; }
+  @media (max-width: 800px) {
+    .content-main, .assessment .prompt-main {
+      width: 90%; } }
 
 /* Assessment Styles */
 @media (max-width: 560px) {
@@ -143,6 +146,8 @@ header {
           user-select: none;
   cursor: default;
   background-color: white; }
+  .assessment .prompt-main .prompt-char.score-0, .assessment .prompt-main .prompt-char.score-1, .assessment .prompt-main .prompt-char.score-2 {
+    color: white; }
   .assessment .prompt-main .prompt-char.score-2 {
     background-color: #66ff66; }
   .assessment .prompt-main .prompt-char.score-1 {

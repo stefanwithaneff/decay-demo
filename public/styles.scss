@@ -70,7 +70,7 @@ table {
 html {
   @media (min-resolution: 192dpi) {
     text-size-adjust: none;
-    font-size: 24px;
+    font-size: 20px;
   }
 }
 
@@ -139,6 +139,10 @@ header {
   margin: 0 auto;
   background-color: $primary-color;
   box-shadow: 0 0.25rem 0.5rem $accent-color;
+
+  @media (max-width: $break-med) {
+    width: 90%;
+  }
 }
 
 /* Assessment Styles */
@@ -194,6 +198,10 @@ header {
       user-select: none;
       cursor: default;
       background-color: white;
+
+      &.score-0, &.score-1, &.score-2 {
+        color: white;
+      }
 
       &.score-2 {
         background-color: $correct-color;

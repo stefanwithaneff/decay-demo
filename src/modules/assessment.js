@@ -65,6 +65,6 @@ export function setTimerForPrompt(delay) {
   return dispatch => {
     setTimeout(() => {
       dispatch({ type: READY_PROMPT });
-    }, delay * 1000);
+    }, (delay > 0) ? delay * 1000 : 0);
   };
 }
