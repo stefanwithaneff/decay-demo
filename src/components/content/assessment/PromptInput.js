@@ -6,14 +6,22 @@ export default class PromptInput extends React.Component {
     const res = responseStr.toUpperCase().split('');
     // eslint-disable-next-line prefer-const
     let score = prompt.split('').slice();
+    // Score correct letter, correct placement
     res.forEach((char, i) => {
       if (char === score[i]) {
-        score[i] = 2;
-      } else if (score.indexOf(char) !== -1) {
+        score[i] = res[i] = 2;
+      }
+    });
+
+    // Score correct letter, incorrect placement
+    res.forEach((char) => {
+      if (typeof char === 'number') return;
+      if (score.indexOf(char) !== -1) {
         score[score.indexOf(char)] = 1;
       }
     });
 
+    // Score incorrect letter
     return score.map((char) => {
       return (typeof char === 'string') ? 0 : char;
     });
