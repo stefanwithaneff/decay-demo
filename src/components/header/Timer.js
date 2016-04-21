@@ -14,7 +14,18 @@ class Timer extends React.Component {
     // Set timer if app is reloaded in waiting view
     if (this.props.view === 'wait') {
       this.cancelTimer = this.props.setTimer(this.props.delay -
-        (Date.now() - this.props.lastReintro) / 1000);
+        Math.floor((Date.now() - this.props.lastReintro) / 1000));
+    }
+
+    // Add event listener for page visibility
+    if (typeof document.addEventListener !== 'undefined' &&
+        typeof document.hidden !== 'undefined') {
+      document.addEventListener('visibilityChange', () => {
+        if (this.props.delay * 1000 - (Date.now() - this.props.lastReintro) <= 0) {
+          this.cancelTimer();
+          this.cancelTimer = this.props.setTimer(0);
+        }
+      });
     }
 
     // Initialize timer render loop

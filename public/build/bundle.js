@@ -952,6 +952,45 @@
       };
     }
 
+    // Compare prompt and response to derive score
+    function recordScore(prompt, responseStr) {
+      var res = responseStr.toUpperCase().split('');
+      // eslint-disable-next-line prefer-const
+      var score = prompt.split('').slice();
+      // Score correct letter, correct placement
+      res.forEach(function (char, i) {
+        if (char === score[i]) {
+          score[i] = res[i] = 2;
+        }
+      });
+
+      // Score correct letter, incorrect placement
+      res.forEach(function (char) {
+        if (typeof char === 'number') return;
+        if (score.indexOf(char) !== -1) {
+          score[score.indexOf(char)] = 1;
+        }
+      });
+
+      // Score incorrect letter
+      return score.map(function (char) {
+        return typeof char === 'string' ? 0 : char;
+      });
+    }
+
+    // Derive k value from score array and last reintroduction time
+    function deriveK(scoreArr, lastReintro) {
+      var score = scoreArr.reduce(function (sum, char) {
+        return sum + char / (scoreArr.length * 2);
+      }, 0);
+      if (score === 1) {
+        score = (scoreArr.length * 2 - 1) / (scoreArr.length * 2);
+      } else if (score === 0) {
+        score = 1 / (scoreArr.length * 2);
+      }
+      return Math.abs(Math.log(score) / ((Date.now() - lastReintro) / 1000));
+    }
+
     function defaultEqualityCheck(a, b) {
       return a === b;
     }
@@ -1301,9 +1340,21 @@
       babelHelpers.createClass(Timer, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
+          var _this2 = this;
+
           // Set timer if app is reloaded in waiting view
           if (this.props.view === 'wait') {
-            this.cancelTimer = this.props.setTimer(this.props.delay - (Date.now() - this.props.lastReintro) / 1000);
+            this.cancelTimer = this.props.setTimer(this.props.delay - Math.floor((Date.now() - this.props.lastReintro) / 1000));
+          }
+
+          // Add event listener for page visibility
+          if (typeof document.addEventListener !== 'undefined' && typeof document.hidden !== 'undefined') {
+            document.addEventListener('visibilityChange', function () {
+              if (_this2.props.delay * 1000 - (Date.now() - _this2.props.lastReintro) <= 0) {
+                _this2.cancelTimer();
+                _this2.cancelTimer = _this2.props.setTimer(0);
+              }
+            });
           }
 
           // Initialize timer render loop
@@ -1361,12 +1412,12 @@
       }, {
         key: 'render',
         value: function render() {
-          var _this2 = this;
+          var _this3 = this;
 
           return React.createElement(
             'div',
             { className: 'timer', ref: function ref(e) {
-                _this2.timer = e;
+                _this3.timer = e;
               } },
             this.props.view === 'wait' ? this.timeToText(this.props.delay, this.props.lastReintro) : '00:00:00'
           );
@@ -1554,51 +1605,6 @@
 
     var PromptInput = function (_React$Component) {
       babelHelpers.inherits(PromptInput, _React$Component);
-      babelHelpers.createClass(PromptInput, null, [{
-        key: 'recordScore',
-
-        // Compare prompt and response to derive score
-        value: function recordScore(prompt, responseStr) {
-          var res = responseStr.toUpperCase().split('');
-          // eslint-disable-next-line prefer-const
-          var score = prompt.split('').slice();
-          // Score correct letter, correct placement
-          res.forEach(function (char, i) {
-            if (char === score[i]) {
-              score[i] = res[i] = 2;
-            }
-          });
-
-          // Score correct letter, incorrect placement
-          res.forEach(function (char) {
-            if (typeof char === 'number') return;
-            if (score.indexOf(char) !== -1) {
-              score[score.indexOf(char)] = 1;
-            }
-          });
-
-          // Score incorrect letter
-          return score.map(function (char) {
-            return typeof char === 'string' ? 0 : char;
-          });
-        }
-
-        // Derive k value from score array and last reintroduction time
-
-      }, {
-        key: 'deriveK',
-        value: function deriveK(scoreArr, lastReintro) {
-          var score = scoreArr.reduce(function (sum, char) {
-            return sum + char / (scoreArr.length * 2);
-          }, 0);
-          if (score === 1) {
-            score = (scoreArr.length * 2 - 1) / (scoreArr.length * 2);
-          } else if (score === 0) {
-            score = 1 / (scoreArr.length * 2);
-          }
-          return Math.abs(Math.log(score) / ((Date.now() - lastReintro) / 1000));
-        }
-      }]);
 
       function PromptInput(props) {
         babelHelpers.classCallCheck(this, PromptInput);
@@ -1632,8 +1638,8 @@
       }, {
         key: 'getData',
         value: function getData() {
-          var score = PromptInput.recordScore(this.props.prompt, this.input.value);
-          return [score, PromptInput.deriveK(score, this.props.lastReintro)];
+          var score = recordScore(this.props.prompt, this.input.value);
+          return [score, deriveK(score, this.props.lastReintro)];
         }
 
         // Submits input value when the Enter key is hit
@@ -1645,6 +1651,9 @@
             this.validateInput();
           }
         }
+
+        // Fills input with prompt hinting
+
       }, {
         key: 'autoFill',
         value: function autoFill() {
@@ -1652,6 +1661,9 @@
 
           if (this.props.view === 'prompt' || this.props.view === 'score') {
             this.fakeInput.value = '';
+            if (this.props.view === 'score') {
+              this.input.value = '';
+            }
             return;
           }
           this.fakeInput.value = this.props.prompt.split('').map(function (char, i) {
@@ -1996,19 +2008,6 @@
       };
     }
 
-    // Helper function: Clones action object while stripping meta property
-    function cloneActionSansDelay(action) {
-      var copy = {}; // eslint-disable-line prefer-const
-      Object.keys(action).forEach(function (key) {
-        copy[key] = action[key];
-        if (key === 'meta') {
-          copy[key].delay = undefined;
-        }
-      });
-
-      return copy;
-    }
-
     /*
      * Redux Timer Management Middleware
      *
@@ -2023,7 +2022,7 @@
           if (action.meta && action.meta.delay) {
             var _ret = function () {
               var timer = setTimeout(function () {
-                return next(cloneActionSansDelay(action));
+                return next(action);
               }, action.meta.delay > 0 ? action.meta.delay * 1000 : 0);
 
               return {
@@ -2033,7 +2032,7 @@
               };
             }();
 
-            if ((typeof _ret === 'undefined' ? 'undefined' : babelHelpers.typeof(_ret)) === "object") return _ret.v;
+            if ((typeof _ret === "undefined" ? "undefined" : babelHelpers.typeof(_ret)) === "object") return _ret.v;
           }
           return next(action);
         };

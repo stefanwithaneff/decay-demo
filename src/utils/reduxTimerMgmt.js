@@ -1,16 +1,3 @@
-// Helper function: Clones action object while stripping meta property
-function cloneActionSansDelay(action) {
-  let copy = {}; // eslint-disable-line prefer-const
-  Object.keys(action).forEach((key) => {
-    copy[key] = action[key];
-    if (key === 'meta') {
-      copy[key].delay = undefined;
-    }
-  });
-
-  return copy;
-}
-
 /*
  * Redux Timer Management Middleware
  *
@@ -23,7 +10,7 @@ export default function timerMgmtMiddleware() {
   return next => action => {
     if (action.meta && action.meta.delay) {
       const timer = setTimeout(() => {
-        return next(cloneActionSansDelay(action));
+        return next(action);
       }, action.meta.delay > 0 ? action.meta.delay * 1000 : 0);
 
       return () => clearTimeout(timer);

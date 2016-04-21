@@ -312,6 +312,7 @@ header {
 
 .modal {
   width: 50%;
+  max-width: 640px;
   padding: 40px;
   background-color: $primary-color;
   opacity: 1;
