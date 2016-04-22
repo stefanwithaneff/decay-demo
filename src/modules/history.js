@@ -44,9 +44,9 @@ export const aggregateSelector = createSelector(
   scoresSelector,
   (scoresArr) => {
     return scoresArr.toArray().reduce((aggArr, scores, index) => {
-      if (index === 0) return scores.map(score => score / (scores.length * 2));
+      if (index === 0) return scores.map(score => score / (scoresArr.size * 2));
       return aggArr.map((agg, i) => {
-        return agg + scores[i] / (scores.length * 2);
+        return agg + scores[i] / (scoresArr.size * 2);
       });
     }, null);
   }

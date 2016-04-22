@@ -97,7 +97,7 @@ header {
   padding-top: 50px;
   background-color: white; }
 
-.content-main, .assessment .prompt-main {
+.content-main, .assessment .prompt-main, .history .prompt-main {
   width: 80%;
   max-width: 800px;
   padding: 50px;
@@ -105,38 +105,38 @@ header {
   background-color: #f1f2f4;
   box-shadow: 0 0.25rem 0.5rem #b9bfc6; }
   @media (max-width: 800px) {
-    .content-main, .assessment .prompt-main {
+    .content-main, .assessment .prompt-main, .history .prompt-main {
       width: 90%; } }
 
 /* Assessment Styles */
 @media (max-width: 560px) {
-  .assessment .prompt-main .prompt-info, .assessment .prompt-main .prompt-string, .assessment .prompt-main .prompt-input input {
+  .assessment .prompt-main .prompt-info, .history .prompt-main .prompt-info, .assessment .prompt-main .prompt-string, .history .prompt-main .prompt-string, .assessment .prompt-main .prompt-input input, .history .prompt-main .prompt-input input {
     font-size: 1rem !important; } }
 
-.assessment .prompt-main.wait .prompt-string, .assessment .prompt-main.wait .prompt-input {
+.assessment .prompt-main.wait .prompt-string, .history .prompt-main.wait .prompt-string, .assessment .prompt-main.wait .prompt-input, .history .prompt-main.wait .prompt-input {
   visibility: hidden; }
 
-.assessment .prompt-main.prompt .prompt-string {
+.assessment .prompt-main.prompt .prompt-string, .history .prompt-main.prompt .prompt-string {
   visibility: hidden; }
 
-.assessment .prompt-main .prompt-info {
+.assessment .prompt-main .prompt-info, .history .prompt-main .prompt-info {
   min-height: 3rem;
   text-align: left;
   font-size: 1.4rem;
   font-weight: bold; }
 
-.assessment .prompt-main .prompt-string {
+.assessment .prompt-main .prompt-string, .history .prompt-main .prompt-string {
   margin-top: 2rem;
   margin-bottom: 3rem;
   font-size: 3rem;
   font-family: Consolas, monospace; }
   @media (max-width: 800px) {
-    .assessment .prompt-main .prompt-string {
+    .assessment .prompt-main .prompt-string, .history .prompt-main .prompt-string {
       font-size: 2rem; }
-      .assessment .prompt-main .prompt-string .prompt-char {
+      .assessment .prompt-main .prompt-string .prompt-char, .history .prompt-main .prompt-string .prompt-char {
         padding: 0.25rem; } }
 
-.assessment .prompt-main .prompt-char {
+.assessment .prompt-main .prompt-char, .history .prompt-main .prompt-char {
   display: inline-block;
   padding: 0.5rem;
   border: 1px solid #b9bfc6;
@@ -146,40 +146,40 @@ header {
           user-select: none;
   cursor: default;
   background-color: white; }
-  .assessment .prompt-main .prompt-char.score-0, .assessment .prompt-main .prompt-char.score-1, .assessment .prompt-main .prompt-char.score-2 {
+  .assessment .prompt-main .prompt-char.score-0, .history .prompt-main .prompt-char.score-0, .assessment .prompt-main .prompt-char.score-1, .history .prompt-main .prompt-char.score-1, .assessment .prompt-main .prompt-char.score-2, .history .prompt-main .prompt-char.score-2 {
     color: white; }
-  .assessment .prompt-main .prompt-char.score-2 {
+  .assessment .prompt-main .prompt-char.score-2, .history .prompt-main .prompt-char.score-2 {
     background-color: #66ff66; }
-  .assessment .prompt-main .prompt-char.score-1 {
+  .assessment .prompt-main .prompt-char.score-1, .history .prompt-main .prompt-char.score-1 {
     background-color: #6666ff; }
-  .assessment .prompt-main .prompt-char.score-0 {
+  .assessment .prompt-main .prompt-char.score-0, .history .prompt-main .prompt-char.score-0 {
     background-color: #ff6666; }
 
-.assessment .prompt-main .prompt-input {
+.assessment .prompt-main .prompt-input, .history .prompt-main .prompt-input {
   display: -webkit-box;
   display: flex;
   flex-flow: row wrap;
   position: relative; }
-  .assessment .prompt-main .prompt-input .real {
+  .assessment .prompt-main .prompt-input .real, .history .prompt-main .prompt-input .real {
     position: relative;
     z-index: 1; }
-  .assessment .prompt-main .prompt-input .fake {
+  .assessment .prompt-main .prompt-input .fake, .history .prompt-main .prompt-input .fake {
     position: absolute;
     width: 100%;
     top: 0;
     left: 0;
     z-index: 0; }
-    .assessment .prompt-main .prompt-input .fake input {
+    .assessment .prompt-main .prompt-input .fake input, .history .prompt-main .prompt-input .fake input {
       color: gray;
       font-style: italic; }
-  .assessment .prompt-main .prompt-input input {
+  .assessment .prompt-main .prompt-input input, .history .prompt-main .prompt-input input {
     -webkit-box-flex: 5;
             flex-grow: 5;
     font-size: 1.5rem;
     font-family: monospace; }
-    .assessment .prompt-main .prompt-input input.real {
+    .assessment .prompt-main .prompt-input input.real, .history .prompt-main .prompt-input input.real {
       background-color: transparent; }
-  .assessment .prompt-main .prompt-input button {
+  .assessment .prompt-main .prompt-input button, .history .prompt-main .prompt-input button {
     -webkit-box-flex: 1;
             flex-grow: 1;
     border: 0;
@@ -188,7 +188,7 @@ header {
     color: white;
     background-color: #0084ff;
     cursor: pointer; }
-  .assessment .prompt-main .prompt-input .prompt-error {
+  .assessment .prompt-main .prompt-input .prompt-error, .history .prompt-main .prompt-input .prompt-error {
     -webkit-box-flex: 0;
             flex-grow: 0;
     height: 1rem;
@@ -196,7 +196,7 @@ header {
     text-align: left;
     color: red; }
 
-.assessment .modal-toggle {
+.assessment .modal-toggle, .history .modal-toggle {
   width: 80%;
   max-width: 800px;
   padding: 0.5rem;
@@ -204,12 +204,16 @@ header {
   text-align: right;
   color: #0084ff; }
   @media (max-width: 800px) {
-    .assessment .modal-toggle {
+    .assessment .modal-toggle, .history .modal-toggle {
       width: 90%; } }
-  .assessment .modal-toggle span {
+  .assessment .modal-toggle span, .history .modal-toggle span {
     cursor: pointer; }
-    .assessment .modal-toggle span:hover {
+    .assessment .modal-toggle span:hover, .history .modal-toggle span:hover {
       color: #304050; }
+
+/* History Styles */
+.history .prompt-string {
+  color: white; }
 
 /* Modal Styles */
 .modal-container {

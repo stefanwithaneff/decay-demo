@@ -23,7 +23,7 @@ const defaultState = Immutable.Map({
   }),
   history: Immutable.Map({
     scores: Immutable.List(),
-    index: -1,
+    index: 0,
   }),
 });
 /* eslint-enable */

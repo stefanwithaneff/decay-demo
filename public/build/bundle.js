@@ -1293,6 +1293,14 @@
       }
     }
 
+    // Action Creator: Changes index for viewable score data
+    function changeIndex(index) {
+      return {
+        type: CHANGE_INDEX,
+        index: index
+      };
+    }
+
     var scoresSelector = function scoresSelector(state) {
       return state.get('history').get('scores');
     };
@@ -1301,10 +1309,10 @@
     var aggregateSelector = createSelector(scoresSelector, function (scoresArr) {
       return scoresArr.toArray().reduce(function (aggArr, scores, index) {
         if (index === 0) return scores.map(function (score) {
-          return score / (scores.length * 2);
+          return score / (scoresArr.size * 2);
         });
         return aggArr.map(function (agg, i) {
-          return agg + scores[i] / (scores.length * 2);
+          return agg + scores[i] / (scoresArr.size * 2);
         });
       }, null);
     });
@@ -1625,7 +1633,7 @@
       babelHelpers.createClass(PromptInput, [{
         key: 'componentDidUpdate',
         value: function componentDidUpdate(prevProps) {
-          this.input.value = this.props.view !== prevProps.view ? '' : this.input.value;
+          this.input.value = this.props.view !== prevProps.view && this.props.view !== 'score' ? '' : this.input.value;
           if (prevProps.prompt !== this.props.prompt && prevProps.prompt !== 'practice') {
             this.fakeInput.value = '';
           } else {
@@ -1838,17 +1846,184 @@
       );
     };
 
-    var History = function History() {
+    var HistoryNav = function (_React$Component) {
+      babelHelpers.inherits(HistoryNav, _React$Component);
+
+      function HistoryNav(props) {
+        babelHelpers.classCallCheck(this, HistoryNav);
+
+        var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(HistoryNav).call(this, props));
+
+        _this.navIndex = _this.navIndex.bind(_this);
+        return _this;
+      }
+
+      babelHelpers.createClass(HistoryNav, [{
+        key: 'navIndex',
+        value: function navIndex(loc) {
+          if (this.props.scores.size === 0) return;
+          switch (loc) {
+            case 'left':
+              if (this.props.index <= 0) return;
+              this.props.changeIndex(this.props.index - 1);
+              break;
+            case 'history':
+              this.props.changeIndex(this.props.scores.size - 1);
+              break;
+            case 'agg':
+              this.props.changeIndex(-1);
+              break;
+            case 'right':
+              if (this.props.index < this.props.scores.size - 1 && this.props.index >= 0) {
+                this.props.changeIndex(this.props.index + 1);
+              }
+              break;
+            default:
+          }
+        }
+      }, {
+        key: 'render',
+        value: function render() {
+          var _this2 = this;
+
+          return React.createElement(
+            'div',
+            { className: 'history-nav' },
+            React.createElement(
+              'button',
+              { className: 'nav-left', onClick: function onClick() {
+                  return _this2.navIndex('left');
+                } },
+              '◄'
+            ),
+            React.createElement(
+              'button',
+              { className: this.props.index < 0 ? 'nav-history' : 'nav-history selected',
+                onClick: function onClick() {
+                  return _this2.navIndex('history');
+                }
+              },
+              'Score History'
+            ),
+            React.createElement(
+              'button',
+              { className: this.props.index < 0 ? 'nav-agg selected' : 'nav-agg',
+                onClick: function onClick() {
+                  return _this2.navIndex('agg');
+                }
+              },
+              'Aggregate Score'
+            ),
+            React.createElement(
+              'button',
+              { className: 'nav-right', onClick: function onClick() {
+                  return _this2.navIndex('right');
+                } },
+              '►'
+            )
+          );
+        }
+      }]);
+      return HistoryNav;
+    }(React.Component);
+
+    HistoryNav.propTypes = {
+      index: React.PropTypes.number.isRequired,
+      scores: React.PropTypes.object,
+      changeIndex: React.PropTypes.func.isRequired
+    };
+
+    var HistoryVis = function HistoryVis(props) {
+      if (props.scores.size === 0) {
+        return React.createElement(
+          'div',
+          { className: 'prompt-string empty' },
+          props.prompt.split('').map(function (char, i) {
+            return React.createElement(
+              'span',
+              { key: 'char-' + i, className: 'prompt-char' },
+              char
+            );
+          })
+        );
+      }
       return React.createElement(
-        "div",
-        { className: "content history" },
-        "History"
+        'div',
+        { className: 'prompt-string' },
+        props.index < 0 ? props.scoreAgg.map(function (freq, i) {
+          return React.createElement(
+            'span',
+            { key: 'char-' + i,
+              className: 'prompt-char',
+              style: { backgroundColor: 'hsl(' + (360 - Math.floor(freq * 240)) + ', 100%, 70%)' }
+            },
+            props.prompt[i]
+          );
+        }) : props.scores.get(props.index).map(function (score, i) {
+          return React.createElement(
+            'span',
+            { key: 'char-' + i, className: 'prompt-char score-' + score },
+            props.prompt[i]
+          );
+        })
       );
     };
 
+    HistoryVis.propTypes = {
+      index: React.PropTypes.number.isRequired,
+      scores: React.PropTypes.object,
+      scoreAgg: React.PropTypes.array,
+      prompt: React.PropTypes.string.isRequired
+    };
+
+    var History = function History(props) {
+      return React.createElement(
+        'div',
+        { className: 'content history' },
+        React.createElement(
+          'div',
+          { className: 'prompt-main' },
+          React.createElement(HistoryNav, { index: props.index,
+            scores: props.scores,
+            changeIndex: props.changeIndex
+          }),
+          React.createElement(HistoryVis, { index: props.index,
+            scores: props.scores,
+            scoreAgg: props.scoreAgg,
+            prompt: props.prompt
+          })
+        )
+      );
+    };
+
+    History.propTypes = {
+      index: React.PropTypes.number.isRequired,
+      scores: React.PropTypes.object.isRequired,
+      scoreAgg: React.PropTypes.array,
+      prompt: React.PropTypes.string.isRequired,
+      changeIndex: React.PropTypes.func.isRequired
+    };
+
+    function mapStateToProps$4(state) {
+      return {
+        index: state.get('history').get('index'),
+        scores: state.get('history').get('scores'),
+        scoreAgg: aggregateSelector(state),
+        prompt: state.get('assessment').get('prompt')
+      };
+    }
+
+    function mapDispatchToProps$5(dispatch) {
+      return {
+        changeIndex: Redux.bindActionCreators(changeIndex, dispatch)
+      };
+    }
+
+    var History$1 = connect(mapStateToProps$4, mapDispatchToProps$5)(History);
+
     var TabbedWindow = function TabbedWindow(props) {
       if (props.tab === 1) return React.createElement(Data, null);
-      if (props.tab === 2) return React.createElement(History, null);
+      if (props.tab === 2) return React.createElement(History$1, null);
       return React.createElement(Assessment, null);
     };
 
@@ -2053,7 +2228,7 @@
       }),
       history: Immutable.Map({
         scores: Immutable.List(),
-        index: -1
+        index: 0
       })
     });
     /* eslint-enable */

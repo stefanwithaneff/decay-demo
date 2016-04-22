@@ -293,6 +293,14 @@ header {
   }
 }
 
+/* History Styles */
+.history {
+  @extend .assessment;
+  .prompt-string {
+    color: $secondary-color;
+  }
+}
+
 /* Modal Styles */
 .modal-container {
   display: flex;
