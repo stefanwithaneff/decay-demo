@@ -1348,21 +1348,9 @@
       babelHelpers.createClass(Timer, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-          var _this2 = this;
-
           // Set timer if app is reloaded in waiting view
           if (this.props.view === 'wait') {
             this.cancelTimer = this.props.setTimer(this.props.delay - Math.floor((Date.now() - this.props.lastReintro) / 1000));
-          }
-
-          // Add event listener for page visibility
-          if (typeof document.addEventListener !== 'undefined' && typeof document.hidden !== 'undefined') {
-            document.addEventListener('visibilityChange', function () {
-              if (_this2.props.delay * 1000 - (Date.now() - _this2.props.lastReintro) <= 0) {
-                _this2.cancelTimer();
-                _this2.cancelTimer = _this2.props.setTimer(0);
-              }
-            });
           }
 
           // Initialize timer render loop
@@ -1420,12 +1408,12 @@
       }, {
         key: 'render',
         value: function render() {
-          var _this3 = this;
+          var _this2 = this;
 
           return React.createElement(
             'div',
             { className: 'timer', ref: function ref(e) {
-                _this3.timer = e;
+                _this2.timer = e;
               } },
             this.props.view === 'wait' ? this.timeToText(this.props.delay, this.props.lastReintro) : '00:00:00'
           );
@@ -1633,7 +1621,7 @@
       babelHelpers.createClass(PromptInput, [{
         key: 'componentDidUpdate',
         value: function componentDidUpdate(prevProps) {
-          this.input.value = this.props.view !== prevProps.view && this.props.view !== 'score' ? '' : this.input.value;
+          this.input.value = this.props.view !== prevProps.view ? '' : this.input.value;
           if (prevProps.prompt !== this.props.prompt && prevProps.prompt !== 'practice') {
             this.fakeInput.value = '';
           } else {

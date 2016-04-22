@@ -17,17 +17,6 @@ class Timer extends React.Component {
         Math.floor((Date.now() - this.props.lastReintro) / 1000));
     }
 
-    // Add event listener for page visibility
-    if (typeof document.addEventListener !== 'undefined' &&
-        typeof document.hidden !== 'undefined') {
-      document.addEventListener('visibilityChange', () => {
-        if (this.props.delay * 1000 - (Date.now() - this.props.lastReintro) <= 0) {
-          this.cancelTimer();
-          this.cancelTimer = this.props.setTimer(0);
-        }
-      });
-    }
-
     // Initialize timer render loop
     requestAnimationFrame(this.changeTime);
   }
