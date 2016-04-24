@@ -1937,7 +1937,7 @@
       }
       return React.createElement(
         'div',
-        { className: 'prompt-string' },
+        { className: props.view === 'wait' ? 'prompt-string no-chars' : 'prompt-string' },
         props.index < 0 ? props.scoreAgg.map(function (freq, i) {
           return React.createElement(
             'span',
@@ -1958,6 +1958,7 @@
     };
 
     HistoryVis.propTypes = {
+      view: React.PropTypes.string.isRequired,
       index: React.PropTypes.number.isRequired,
       scores: React.PropTypes.object,
       scoreAgg: React.PropTypes.array,
@@ -1975,16 +1976,47 @@
             scores: props.scores,
             changeIndex: props.changeIndex
           }),
-          React.createElement(HistoryVis, { index: props.index,
+          React.createElement(HistoryVis, { view: props.view,
+            index: props.index,
             scores: props.scores,
             scoreAgg: props.scoreAgg,
             prompt: props.prompt
-          })
+          }),
+          props.index >= 0 ? React.createElement(
+            'div',
+            { className: 'history-page' },
+            'Recall Attempt ' + (props.index + 1) + '/' + props.scores.size
+          ) : React.createElement(
+            'div',
+            { className: 'history-legend' },
+            React.createElement(
+              'div',
+              { className: 'legend-info' },
+              'Per Letter Accuracy'
+            ),
+            React.createElement('div', { className: 'legend-bar' }),
+            React.createElement(
+              'span',
+              { className: 'legend-label zero' },
+              '0%'
+            ),
+            React.createElement(
+              'span',
+              { className: 'legend-label fifty' },
+              '50%'
+            ),
+            React.createElement(
+              'span',
+              { className: 'legend-label hundred' },
+              '100%'
+            )
+          )
         )
       );
     };
 
     History.propTypes = {
+      view: React.PropTypes.string.isRequired,
       index: React.PropTypes.number.isRequired,
       scores: React.PropTypes.object.isRequired,
       scoreAgg: React.PropTypes.array,
@@ -1994,6 +2026,7 @@
 
     function mapStateToProps$4(state) {
       return {
+        view: state.get('assessment').get('view'),
         index: state.get('history').get('index'),
         scores: state.get('history').get('scores'),
         scoreAgg: aggregateSelector(state),

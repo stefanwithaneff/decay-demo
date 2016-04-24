@@ -13,7 +13,7 @@ const HistoryVis = (props) => {
     );
   }
   return (
-    <div className="prompt-string">
+    <div className={(props.view === 'wait') ? 'prompt-string no-chars' : 'prompt-string'}>
       {
         (props.index < 0) ?
           props.scoreAgg.map((freq, i) => {
@@ -39,6 +39,7 @@ const HistoryVis = (props) => {
 };
 
 HistoryVis.propTypes = {
+  view: React.PropTypes.string.isRequired,
   index: React.PropTypes.number.isRequired,
   scores: React.PropTypes.object,
   scoreAgg: React.PropTypes.array,
