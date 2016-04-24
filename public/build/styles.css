@@ -97,7 +97,7 @@ header {
   padding-top: 50px;
   background-color: white; }
 
-.content-main, .assessment .prompt-main, .history .prompt-main {
+.content-main, .assessment .prompt-main, .history .prompt-main, .data .data-main {
   width: 80%;
   max-width: 800px;
   padding: 50px;
@@ -105,7 +105,7 @@ header {
   background-color: #f1f2f4;
   box-shadow: 0 0.25rem 0.5rem #b9bfc6; }
   @media (max-width: 800px) {
-    .content-main, .assessment .prompt-main, .history .prompt-main {
+    .content-main, .assessment .prompt-main, .history .prompt-main, .data .data-main {
       width: 90%; } }
 
 /* Assessment Styles */
@@ -210,6 +210,33 @@ header {
     cursor: pointer; }
     .assessment .modal-toggle span:hover, .history .modal-toggle span:hover {
       color: #304050; }
+
+/* Data Styles */
+.data .data-main {
+  position: relative; }
+  .data .data-main .data-chart {
+    position: relative;
+    z-index: 1; }
+  .data .data-main svg {
+    width: 100%;
+    height: auto; }
+    .data .data-main svg .axis path, .data .data-main svg .axis line {
+      fill: none;
+      stroke: #304050; }
+    .data .data-main svg .chart-label {
+      font-size: 20px;
+      font-weight: bold; }
+    .data .data-main svg .data-info {
+      font-size: 2rem;
+      font-weight: bold; }
+  .data .data-main canvas {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: calc(100% - 100px);
+    height: auto;
+    background-color: white;
+    z-index: 0; }
 
 /* History Styles */
 .history .history-nav {

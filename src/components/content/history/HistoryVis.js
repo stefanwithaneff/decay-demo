@@ -13,9 +13,13 @@ const HistoryVis = (props) => {
     );
   }
   return (
-    <div className={(props.view === 'wait') ? 'prompt-string no-chars' : 'prompt-string'}>
+    <div className={(props.view === 'wait' || props.view === 'prompt') ?
+      'prompt-string no-chars' : 'prompt-string'
+    }
+    >
       {
         (props.index < 0) ?
+          // Show the aggregate score
           props.scoreAgg.map((freq, i) => {
             return (
               <span key={`char-${i}`}
@@ -26,6 +30,7 @@ const HistoryVis = (props) => {
               </span>
             );
           }) :
+          // Show the score history
           props.scores.get(props.index).map((score, i) => {
             return (
               <span key={`char-${i}`} className={`prompt-char score-${score}`}>

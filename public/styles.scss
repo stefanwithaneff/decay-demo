@@ -293,7 +293,52 @@ header {
   }
 }
 
+/* Data Styles */
+
+.data {
+  .data-main {
+    @extend .content-main;
+    position: relative;
+
+    .data-chart {
+      position: relative;
+      z-index: 1;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+
+      .axis path, .axis line {
+        fill: none;
+        stroke: $inactive-color;
+      }
+
+      .chart-label {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .data-info {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+    }
+
+    canvas {
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      width: calc(100% - 100px);
+      height: auto;
+      background-color: $secondary-color;
+      z-index: 0;
+    }
+  }
+}
+
 /* History Styles */
+
 .history {
   @extend .assessment;
 

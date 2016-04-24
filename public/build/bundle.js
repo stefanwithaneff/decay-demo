@@ -1,10 +1,11 @@
-(function (React,ReactDOM,Redux,Immutable) {
+(function (React,ReactDOM,Redux,Immutable,d3) {
     'use strict';
 
     React = 'default' in React ? React['default'] : React;
     ReactDOM = 'default' in ReactDOM ? ReactDOM['default'] : ReactDOM;
     Redux = 'default' in Redux ? Redux['default'] : Redux;
     Immutable = 'default' in Immutable ? Immutable['default'] : Immutable;
+    d3 = 'default' in d3 ? d3['default'] : d3;
 
     function __commonjs(fn, module) { return module = { exports: {} }, fn(module, module.exports), module.exports; }
 
@@ -1826,13 +1827,151 @@
       );
     };
 
-    var Data = function Data() {
-      return React.createElement(
-        "div",
-        { className: "content data" },
-        "Data"
-      );
+    var WIDTH = 960;
+    var HEIGHT = 540;
+    var margin = {
+      top: 0,
+      right: 10,
+      bottom: 60,
+      left: 60
     };
+
+    var Data = function (_React$Component) {
+      babelHelpers.inherits(Data, _React$Component);
+
+      function Data(props) {
+        babelHelpers.classCallCheck(this, Data);
+
+        var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Data).call(this, props));
+
+        _this.d3Render = _this.d3Render.bind(_this);
+        _this.graphData = _this.graphData.bind(_this);
+        return _this;
+      }
+
+      babelHelpers.createClass(Data, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+          this.d3Render();
+          this.graphData();
+        }
+
+        // Renders the chart
+
+      }, {
+        key: 'd3Render',
+        value: function d3Render() {
+          var _this2 = this;
+
+          // Append svg to React component
+          var svg = d3.select('.data-chart').append('svg').attr('width', WIDTH + margin.left + margin.right).attr('height', HEIGHT + margin.top + margin.bottom).attr('viewBox', '0 0 ' + (WIDTH + margin.left + margin.right) + ' ' + (HEIGHT + margin.top + margin.bottom)); // eslint-disable-line max-len
+
+          // Create chart coordinate space
+          var chart = svg.append('g').attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+          // Handle edge case of less than 2 data points
+          if (this.props.kArray.length < 2) {
+            svg.append('text').attr('class', 'data-info').attr('text-anchor', 'middle').attr('x', (WIDTH + margin.left + margin.right) / 2).attr('y', (HEIGHT + margin.top + margin.bottom) / 2).text('More data required (at least 2 recall attempts)');
+            return;
+          }
+
+          // Define x and y scale
+          this.xScale = d3.scale.linear().domain([0, this.props.kArray.length + 1]).range([0, WIDTH]);
+
+          this.yScale = d3.scale.linear().domain([0, Math.exp(this.props.kStar.intercept)]).range([HEIGHT, 0]);
+
+          // Plot data onto chart
+          chart.selectAll('circle').data(this.props.kArray).enter().append('circle').attr('class', 'data-point').attr('cx', function (d, i) {
+            return _this2.xScale(i + 1);
+          }).attr('cy', function (d) {
+            return _this2.yScale(d);
+          }).attr('r', '10').attr('fill', 'hsl(209, 100%, 50%)');
+
+          // Plot axes
+          var xAxis = d3.svg.axis().scale(this.xScale).orient('bottom');
+          var yAxis = d3.svg.axis().scale(this.yScale).orient('left').ticks(2);
+
+          chart.append('g').attr('class', 'x axis').attr('transform', 'translate(0, ' + HEIGHT + ')').call(xAxis);
+
+          chart.append('g').attr('class', 'y axis').call(yAxis);
+
+          // Add axis labels
+          chart.append('text').attr('class', 'chart-label').attr('text-anchor', 'middle').attr('x', WIDTH / 2).attr('y', HEIGHT + 50).text('Number of Recall Attempts');
+
+          chart.append('text').attr('class', 'chart-label').attr('text-anchor', 'middle').attr('transform', 'translate(-40, ' + HEIGHT / 2 + ') rotate(-90)').text('Predicted k-Value (lower is better)');
+        }
+
+        // Renders the k* line
+
+      }, {
+        key: 'graphData',
+        value: function graphData() {
+          if (this.props.kArray.length < 2) return;
+
+          var ctx = this.graph.getContext('2d');
+          ctx.save();
+
+          // Configure drawing context
+          ctx.translate(margin.left, margin.top);
+          ctx.strokeStyle = 'hsl(209, 25%, 25%)';
+          ctx.lineWidth = 5;
+          ctx.lineCap = 'round';
+
+          // Move to line starting point
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+
+          // Draw k* line: y=e^(mx+b)
+          for (var i = 1; i < WIDTH; i++) {
+            var exponent = this.props.kStar.slope * this.xScale.invert(i) + this.props.kStar.intercept;
+            ctx.lineTo(i, this.yScale(Math.exp(exponent)));
+          }
+
+          // Render to canvas
+          ctx.stroke();
+
+          // Reset drawing context
+          ctx.restore();
+        }
+      }, {
+        key: 'render',
+        value: function render() {
+          var _this3 = this;
+
+          return React.createElement(
+            'div',
+            { className: 'content data' },
+            React.createElement(
+              'div',
+              { className: 'data-main' },
+              React.createElement('div', { className: 'data-chart' }),
+              React.createElement('canvas', { ref: function ref(e) {
+                  _this3.graph = e;
+                },
+                className: 'data-graph',
+                width: '' + (WIDTH + margin.left + margin.right),
+                height: '' + (HEIGHT + margin.top + margin.bottom)
+              })
+            )
+          );
+        }
+      }]);
+      return Data;
+    }(React.Component);
+
+    Data.propTypes = {
+      kStar: React.PropTypes.object,
+      kArray: React.PropTypes.array.isRequired
+    };
+
+    function mapStateToProps$4(state) {
+      return {
+        kArray: state.get('data').toArray(),
+        kStar: kStarSelector(state)
+      };
+    }
+
+    var Data$1 = connect(mapStateToProps$4)(Data);
 
     var HistoryNav = function (_React$Component) {
       babelHelpers.inherits(HistoryNav, _React$Component);
@@ -1845,6 +1984,9 @@
         _this.navIndex = _this.navIndex.bind(_this);
         return _this;
       }
+
+      // Contextually change the history tab's index value
+
 
       babelHelpers.createClass(HistoryNav, [{
         key: 'navIndex',
@@ -1937,8 +2079,11 @@
       }
       return React.createElement(
         'div',
-        { className: props.view === 'wait' ? 'prompt-string no-chars' : 'prompt-string' },
-        props.index < 0 ? props.scoreAgg.map(function (freq, i) {
+        { className: props.view === 'wait' || props.view === 'prompt' ? 'prompt-string no-chars' : 'prompt-string'
+        },
+        props.index < 0 ?
+        // Show the aggregate score
+        props.scoreAgg.map(function (freq, i) {
           return React.createElement(
             'span',
             { key: 'char-' + i,
@@ -1947,7 +2092,9 @@
             },
             props.prompt[i]
           );
-        }) : props.scores.get(props.index).map(function (score, i) {
+        }) :
+        // Show the score history
+        props.scores.get(props.index).map(function (score, i) {
           return React.createElement(
             'span',
             { key: 'char-' + i, className: 'prompt-char score-' + score },
@@ -2024,7 +2171,7 @@
       changeIndex: React.PropTypes.func.isRequired
     };
 
-    function mapStateToProps$4(state) {
+    function mapStateToProps$5(state) {
       return {
         view: state.get('assessment').get('view'),
         index: state.get('history').get('index'),
@@ -2040,10 +2187,10 @@
       };
     }
 
-    var History$1 = connect(mapStateToProps$4, mapDispatchToProps$5)(History);
+    var History$1 = connect(mapStateToProps$5, mapDispatchToProps$5)(History);
 
     var TabbedWindow = function TabbedWindow(props) {
-      if (props.tab === 1) return React.createElement(Data, null);
+      if (props.tab === 1) return React.createElement(Data$1, null);
       if (props.tab === 2) return React.createElement(History$1, null);
       return React.createElement(Assessment, null);
     };
@@ -2279,4 +2426,4 @@
       React.createElement(App$1, null)
     ), document.querySelector('#app'));
 
-}(React,ReactDOM,Redux,Immutable));
+}(React,ReactDOM,Redux,Immutable,d3));

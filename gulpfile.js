@@ -15,6 +15,7 @@ gulp.task('bundle', () => {
       'react-dom',
       'redux',
       'immutable',
+      'd3',
     ],
     plugins: [
       nodeResolve({
@@ -41,6 +42,7 @@ gulp.task('bundle', () => {
         'react-dom': 'ReactDOM',
         redux: 'Redux',
         immutable: 'Immutable',
+        d3: 'd3',
       },
     });
   });

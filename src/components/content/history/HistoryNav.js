@@ -6,6 +6,7 @@ export default class HistoryNav extends React.Component {
     this.navIndex = this.navIndex.bind(this);
   }
 
+  // Contextually change the history tab's index value
   navIndex(loc) {
     if (this.props.scores.size === 0) return;
     switch (loc) {
