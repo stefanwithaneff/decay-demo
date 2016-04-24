@@ -298,7 +298,16 @@ header {
 .data {
   .data-main {
     @extend .content-main;
-    position: relative;
+
+    .data-title {
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      text-align: center;
+    }
+
+    .data-vis {
+      position: relative;
+    }
 
     .data-chart {
       position: relative;
@@ -328,9 +337,9 @@ header {
 
     canvas {
       position: absolute;
-      top: 50px;
-      left: 50px;
-      width: calc(100% - 100px);
+      top: 0;
+      left: 0;
+      width: 100%;
       height: auto;
       background-color: $secondary-color;
       z-index: 0;

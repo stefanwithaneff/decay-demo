@@ -212,32 +212,40 @@ header {
       color: #304050; }
 
 /* Data Styles */
-.data .data-main {
+.data .data-main .data-title {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  text-align: center; }
+
+.data .data-main .data-vis {
   position: relative; }
-  .data .data-main .data-chart {
-    position: relative;
-    z-index: 1; }
-  .data .data-main svg {
-    width: 100%;
-    height: auto;
-    max-height: 100%; }
-    .data .data-main svg .axis path, .data .data-main svg .axis line {
-      fill: none;
-      stroke: #304050; }
-    .data .data-main svg .chart-label {
-      font-size: 20px;
-      font-weight: bold; }
-    .data .data-main svg .data-info {
-      font-size: 2rem;
-      font-weight: bold; }
-  .data .data-main canvas {
-    position: absolute;
-    top: 50px;
-    left: 50px;
-    width: calc(100% - 100px);
-    height: auto;
-    background-color: white;
-    z-index: 0; }
+
+.data .data-main .data-chart {
+  position: relative;
+  z-index: 1; }
+
+.data .data-main svg {
+  width: 100%;
+  height: auto;
+  max-height: 100%; }
+  .data .data-main svg .axis path, .data .data-main svg .axis line {
+    fill: none;
+    stroke: #304050; }
+  .data .data-main svg .chart-label {
+    font-size: 20px;
+    font-weight: bold; }
+  .data .data-main svg .data-info {
+    font-size: 2rem;
+    font-weight: bold; }
+
+.data .data-main canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  background-color: white;
+  z-index: 0; }
 
 /* History Styles */
 .history .history-nav {

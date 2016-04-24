@@ -130,12 +130,17 @@ class Data extends React.Component {
     return (
       <div className="content data">
         <div className="data-main">
-          <div className="data-chart" />
-          <canvas ref={(e) => { this.graph = e; }}
-            className="data-graph"
-            width={`${WIDTH + margin.left + margin.right}`}
-            height={`${HEIGHT + margin.top + margin.bottom}`}
-          />
+          <h1 className="data-title">
+            Log-linear Least-Squares Regression of k-Value vs. Number of Attempts
+          </h1>
+          <div className="data-vis">
+            <div className="data-chart" />
+            <canvas ref={(e) => { this.graph = e; }}
+              className="data-graph"
+              width={`${WIDTH + margin.left + margin.right}`}
+              height={`${HEIGHT + margin.top + margin.bottom}`}
+            />
+          </div>
         </div>
       </div>
     );

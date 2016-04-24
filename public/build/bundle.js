@@ -1944,14 +1944,23 @@
             React.createElement(
               'div',
               { className: 'data-main' },
-              React.createElement('div', { className: 'data-chart' }),
-              React.createElement('canvas', { ref: function ref(e) {
-                  _this3.graph = e;
-                },
-                className: 'data-graph',
-                width: '' + (WIDTH + margin.left + margin.right),
-                height: '' + (HEIGHT + margin.top + margin.bottom)
-              })
+              React.createElement(
+                'h1',
+                { className: 'data-title' },
+                'Log-linear Least-Squares Regression of k-Value vs. Number of Attempts'
+              ),
+              React.createElement(
+                'div',
+                { className: 'data-vis' },
+                React.createElement('div', { className: 'data-chart' }),
+                React.createElement('canvas', { ref: function ref(e) {
+                    _this3.graph = e;
+                  },
+                  className: 'data-graph',
+                  width: '' + (WIDTH + margin.left + margin.right),
+                  height: '' + (HEIGHT + margin.top + margin.bottom)
+                })
+              )
             )
           );
         }
