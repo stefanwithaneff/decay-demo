@@ -34,11 +34,11 @@ export const kStarSelector = createSelector(
 
     // Calculate helper summations
     const n = lnKArray.length;
-    const sumN = n * (n + 1) / 2;
-    const sumN2 = n * (n + 1) * (2 * n + 1) / 6;
+    const sumN = n * (n - 1) / 2;
+    const sumN2 = n * (n - 1) * (2 * n - 1) / 6;
     const sumLNK = lnKArray.reduce((sum, lnK) => sum + lnK, 0);
     const sumLNK2 = lnKArray.reduce((sum, lnK) => sum + lnK * lnK, 0);
-    const sumNLNK = lnKArray.reduce((sum, lnK, index) => sum + lnK * (index + 1), 0);
+    const sumNLNK = lnKArray.reduce((sum, lnK, index) => sum + lnK * index, 0);
 
     // Calculate components of Pearson coefficient for a population
     const meanN = sumN / n;
@@ -78,7 +78,7 @@ export const delaySelector = createSelector(
         k = data.get(0) / 2;
       }
     } else {
-      k = Math.exp(kStar.slope * (data.size + 1) + kStar.intercept);
+      k = Math.exp(kStar.slope * data.size + kStar.intercept);
     }
 
     return Math.floor(Math.abs(Math.log(RECALL_THRESHOLD) / k));

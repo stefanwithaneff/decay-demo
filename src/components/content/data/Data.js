@@ -48,9 +48,11 @@ class Data extends React.Component {
       return;
     }
 
+    console.log(this.props.kStar);
+
     // Define x and y scale
     this.xScale = d3.scale.linear()
-      .domain([0, this.props.kArray.length + 1])
+      .domain([0, this.props.kArray.length])
       .range([0, WIDTH]);
 
     this.yScale = d3.scale.linear()
@@ -63,7 +65,7 @@ class Data extends React.Component {
       .enter()
       .append('circle')
       .attr('class', 'data-point')
-      .attr('cx', (d, i) => this.xScale(i + 1))
+      .attr('cx', (d, i) => this.xScale(i))
       .attr('cy', (d) => this.yScale(d))
       .attr('r', '10')
       .attr('fill', 'hsl(209, 100%, 50%)');

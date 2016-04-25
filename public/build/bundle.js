@@ -1112,8 +1112,8 @@
 
       // Calculate helper summations
       var n = lnKArray.length;
-      var sumN = n * (n + 1) / 2;
-      var sumN2 = n * (n + 1) * (2 * n + 1) / 6;
+      var sumN = n * (n - 1) / 2;
+      var sumN2 = n * (n - 1) * (2 * n - 1) / 6;
       var sumLNK = lnKArray.reduce(function (sum, lnK) {
         return sum + lnK;
       }, 0);
@@ -1121,7 +1121,7 @@
         return sum + lnK * lnK;
       }, 0);
       var sumNLNK = lnKArray.reduce(function (sum, lnK, index) {
-        return sum + lnK * (index + 1);
+        return sum + lnK * index;
       }, 0);
 
       // Calculate components of Pearson coefficient for a population
@@ -1158,7 +1158,7 @@
           k = data.get(0) / 2;
         }
       } else {
-        k = Math.exp(kStar.slope * (data.size + 1) + kStar.intercept);
+        k = Math.exp(kStar.slope * data.size + kStar.intercept);
       }
 
       return Math.floor(Math.abs(Math.log(RECALL_THRESHOLD) / k));
@@ -1875,14 +1875,16 @@
             return;
           }
 
+          console.log(this.props.kStar);
+
           // Define x and y scale
-          this.xScale = d3.scale.linear().domain([0, this.props.kArray.length + 1]).range([0, WIDTH]);
+          this.xScale = d3.scale.linear().domain([0, this.props.kArray.length]).range([0, WIDTH]);
 
           this.yScale = d3.scale.linear().domain([0, Math.exp(this.props.kStar.intercept)]).range([HEIGHT, 0]);
 
           // Plot data onto chart
           chart.selectAll('circle').data(this.props.kArray).enter().append('circle').attr('class', 'data-point').attr('cx', function (d, i) {
-            return _this2.xScale(i + 1);
+            return _this2.xScale(i);
           }).attr('cy', function (d) {
             return _this2.yScale(d);
           }).attr('r', '10').attr('fill', 'hsl(209, 100%, 50%)');
