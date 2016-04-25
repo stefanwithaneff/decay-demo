@@ -57,8 +57,8 @@ export function recordScore(prompt, responseStr) {
 // Derive k value from score array and last reintroduction time
 export function deriveK(scoreArr, lastReintro) {
   let score = scoreArr.reduce((sum, char) => sum + char / (scoreArr.length * 2), 0);
-  if (score === 1) {
-    score = (scoreArr.length * 2 - 1) / (scoreArr.length * 2);
+  if (score > 0.9) {
+    score = 0.9;
   } else if (score === 0) {
     score = 1 / (scoreArr.length * 2);
   }

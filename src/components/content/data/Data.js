@@ -9,7 +9,7 @@ const margin = {
   top: 0,
   right: 10,
   bottom: 60,
-  left: 60,
+  left: 75,
 };
 
 class Data extends React.Component {
@@ -47,8 +47,6 @@ class Data extends React.Component {
         .text('More data required (at least 2 recall attempts)');
       return;
     }
-
-    console.log(this.props.kStar);
 
     // Define x and y scale
     this.xScale = d3.scale.linear()
@@ -94,7 +92,7 @@ class Data extends React.Component {
     chart.append('text')
       .attr('class', 'chart-label')
       .attr('text-anchor', 'middle')
-      .attr('transform', `translate(-40, ${HEIGHT / 2}) rotate(-90)`)
+      .attr('transform', `translate(-50, ${HEIGHT / 2}) rotate(-90)`)
       .text('Predicted k-Value (lower is better)');
   }
 

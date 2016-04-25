@@ -84,6 +84,7 @@ export default class PromptInput extends React.Component {
           type="text"
           maxLength={this.props.prompt.length}
           autoComplete="off"
+          disabled={this.props.view === 'wait'}
           onKeyDown={this.submitInput}
           onChange={this.autoFill}
           onFocus={this.autoFill}

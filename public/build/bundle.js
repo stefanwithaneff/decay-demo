@@ -984,8 +984,8 @@
       var score = scoreArr.reduce(function (sum, char) {
         return sum + char / (scoreArr.length * 2);
       }, 0);
-      if (score === 1) {
-        score = (scoreArr.length * 2 - 1) / (scoreArr.length * 2);
+      if (score > 0.9) {
+        score = 0.9;
       } else if (score === 0) {
         score = 1 / (scoreArr.length * 2);
       }
@@ -1712,6 +1712,7 @@
               type: 'text',
               maxLength: this.props.prompt.length,
               autoComplete: 'off',
+              disabled: this.props.view === 'wait',
               onKeyDown: this.submitInput,
               onChange: this.autoFill,
               onFocus: this.autoFill
@@ -1833,7 +1834,7 @@
       top: 0,
       right: 10,
       bottom: 60,
-      left: 60
+      left: 75
     };
 
     var Data = function (_React$Component) {
@@ -1875,8 +1876,6 @@
             return;
           }
 
-          console.log(this.props.kStar);
-
           // Define x and y scale
           this.xScale = d3.scale.linear().domain([0, this.props.kArray.length]).range([0, WIDTH]);
 
@@ -1900,7 +1899,7 @@
           // Add axis labels
           chart.append('text').attr('class', 'chart-label').attr('text-anchor', 'middle').attr('x', WIDTH / 2).attr('y', HEIGHT + 50).text('Number of Recall Attempts');
 
-          chart.append('text').attr('class', 'chart-label').attr('text-anchor', 'middle').attr('transform', 'translate(-40, ' + HEIGHT / 2 + ') rotate(-90)').text('Predicted k-Value (lower is better)');
+          chart.append('text').attr('class', 'chart-label').attr('text-anchor', 'middle').attr('transform', 'translate(-50, ' + HEIGHT / 2 + ') rotate(-90)').text('Predicted k-Value (lower is better)');
         }
 
         // Renders the k* line
