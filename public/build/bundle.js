@@ -2436,4 +2436,8 @@
       React.createElement(App$1, null)
     ), document.querySelector('#app'));
 
+    window.reqData = function () {
+      console.log(store.getState().toJS());
+    };
+
 }(React,ReactDOM,Redux,Immutable,d3));

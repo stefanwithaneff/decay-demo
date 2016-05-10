@@ -55,3 +55,7 @@ ReactDOM.render(
   </Provider>,
   document.querySelector('#app')
 );
+
+window.reqData = () => {
+  console.log(store.getState().toJS());
+};
